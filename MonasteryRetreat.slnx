@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="MonasteryRetreat.Application/MonasteryRetreat.Application.csproj" />
+  <Project Path="MonasteryRetreat.Desktop/MonasteryRetreat.Desktop.csproj" />
+  <Project Path="MonasteryRetreat.Domain/MonasteryRetreat.Domain.csproj" />
+  <Project Path="MonasteryRetreat.Infrastructure/MonasteryRetreat.Infrastructure.csproj" />
+  <Project Path="MonasteryRetreat.Tests/MonasteryRetreat.Tests.csproj" />
+</Solution>
