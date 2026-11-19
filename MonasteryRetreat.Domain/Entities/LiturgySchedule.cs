@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace MonasteryRetreat.Domain.Entities
 {
-    internal class LiturgySchedule
+    public class LiturgySchedule
     {
+        public long Id { get; set; }
+        public long MonasteryChurchId { get; set; }
+        public MonasteryChurch MonasteryChurch { get; set; } = null!;
+        public DateOnly LiturgyDate { get; set; }
+        public TimeOnly StartTime { get; set; }
+        public string? Notes { get; set; }
     }
 }

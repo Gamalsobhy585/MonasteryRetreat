@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace MonasteryRetreat.Domain.Entities
 {
-    internal class MonasteryChurch
+    public class MonasteryChurch
     {
+        public long Id { get; set; }
+        public string NameAr { get; set; } = string.Empty;
+        public bool IsActive { get; set; } = true;
+        public string? Notes { get; set; }
     }
 }
