@@ -244,7 +244,7 @@ public partial class NewReservationWindow : Window
         {
             _isSaving = true;
 
-            await _createReservationService.CreateAsync(input);
+            await _createReservationService.CreateAsync(input!);
 
             MessageBox.Show(
                 "تم حفظ الحجز بنجاح.",
