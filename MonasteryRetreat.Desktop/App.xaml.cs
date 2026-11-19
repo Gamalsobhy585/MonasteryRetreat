@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using MonasteryRetreat.Infrastructure.Persistence;
+using MonasteryRetreat.Infrastructure.Services;
 using MonasteryRetreat.Infrastructure.Persistence.Seeders;
 using MonasteryRetreat.Desktop.Views.Reservations;
 
@@ -19,14 +20,19 @@ public partial class App : System.Windows.Application
         {
             var factory = new MonasteryDbContextFactory();
 
-            await using var db = factory.CreateDbContext(
+            // The context must outlive this method: the window uses it
+            // (through the service) until it is closed.
+            var db = factory.CreateDbContext(
                 Array.Empty<string>());
 
             // Apply migrations and seed initial data.
             await DatabaseSeeder.SeedAsync(db);
 
             // Create reservation window.
-            var window = new NewReservationWindow();
+            var window = new NewReservationWindow(
+                new CreateReservationService(db));
+
+            window.Closed += (_, _) => db.Dispose();
 
             // Load governorates from SQLite.
             await window.LoadGovernoratesAsync(db);

@@ -11,6 +11,10 @@
 		<ApplicationIcon>Assets\logo.ico</ApplicationIcon>
 	</PropertyGroup>
 	<ItemGroup>
+		<Resource Include="Assets\logo.ico" />
+		<Resource Include="Assets\logo.jpg" />
+	</ItemGroup>
+	<ItemGroup>
 		<ProjectReference Include="..\MonasteryRetreat.Application\MonasteryRetreat.Application.csproj" />
 		<ProjectReference Include="..\MonasteryRetreat.Infrastructure\MonasteryRetreat.Infrastructure.csproj" />
 	</ItemGroup>
