@@ -194,13 +194,13 @@ public partial class NewReservationWindow : Window
         return true;
     }
 
-    private async void SaveButton_Click(
+    private async void SaveReservation_Click(
         object sender,
         RoutedEventArgs e)
     {
         await SubmitReservationAsync(false);
     }
-    private async void SaveAndAddAnother_Click(
+    private async void SaveAndAdd_Click(
       object sender,
       RoutedEventArgs e)
     {
