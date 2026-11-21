@@ -1,4 +1,4 @@
-<Window x:Class="MonasteryRetreat.Desktop.MainWindow"
+﻿<Window x:Class="MonasteryRetreat.Desktop.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="نظام إدارة خلوات بيت دير السيدة العذراء السريان"
@@ -54,6 +54,17 @@
                         Cursor="Hand"
                         Margin="0,0,0,8"
                         Click="ReservationsNav_Click"/>
+
+                <Button x:Name="AccommodationNavButton"
+                        Content="⌂  التسكين"
+                        Height="54"
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        Foreground="White"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Margin="0,0,0,8"
+                        Click="AccommodationNav_Click"/>
 
                 <Button x:Name="NewReservationNavButton"
                         Content="＋  حجز جديد"

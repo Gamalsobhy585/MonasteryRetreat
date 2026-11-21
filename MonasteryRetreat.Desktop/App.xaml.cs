@@ -3,6 +3,7 @@ using System.Windows;
 using MonasteryRetreat.Infrastructure.Persistence;
 using MonasteryRetreat.Infrastructure.Services;
 using MonasteryRetreat.Infrastructure.Persistence.Seeders;
+using MonasteryRetreat.Desktop.Views.Accommodation;
 using MonasteryRetreat.Desktop.Views.Reservations;
 
 namespace MonasteryRetreat.Desktop;
@@ -37,12 +38,16 @@ public partial class App : System.Windows.Application
             var reservationsPage = new ReservationsPage(
                 new ReservationManagementService(db));
 
+            var accommodationPage = new AccommodationPage(
+                new AccommodationService(db));
+
             // Load governorates from SQLite.
             await newReservationPage.LoadGovernoratesAsync(db);
 
             var window = new MainWindow(
                 newReservationPage,
-                reservationsPage);
+                reservationsPage,
+                accommodationPage);
 
             window.Closed += (_, _) => db.Dispose();
 
