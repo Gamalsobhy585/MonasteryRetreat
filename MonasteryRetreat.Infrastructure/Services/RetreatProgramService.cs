@@ -35,7 +35,7 @@ public sealed class RetreatProgramService : IRetreatProgramService
 
         var sample = new (string Title, string? Note, int Hour, int Minute, int? EndHour, int? EndMinute)[]
         {
-            ("التسبحة والاستيقاظ", "الاستيقاظ الساعة ٦:١٥ صباحًا. راجع مواعيد الأحد مع المسؤول.", 6, 15, null, null),
+            ("التسبحة والاستيقاظ", "الاستيقاظ الساعة ٦:١٥ صباحًا.", 6, 15, null, null),
             ("القداس", "يوميًا بحسب مواعيد القداسات، مع مراعاة برنامج السبت.", 7, 0, null, null),
             ("الفطار", null, 9, 0, 9, 30),
             ("فترة العمل", "تبدأ من الساعة العاشرة صباحًا.", 10, 0, null, null),
