@@ -30,7 +30,8 @@ public partial class App : System.Windows.Application
 
             // Create reservation window.
             var window = new NewReservationWindow(
-                new CreateReservationService(db));
+                new CreateReservationService(db),
+                new GuestSearchService(db));
 
             window.Closed += (_, _) => db.Dispose();
 

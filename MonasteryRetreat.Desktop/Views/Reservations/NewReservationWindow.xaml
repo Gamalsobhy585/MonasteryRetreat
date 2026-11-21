@@ -366,7 +366,7 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- PREVIOUS GUEST PLACEHOLDER -->
+                    <!-- PREVIOUS GUEST -->
                     <Border x:Name="PreviousGuestSection"
                             Style="{StaticResource Card}"
                             Visibility="Collapsed">
@@ -374,18 +374,116 @@
                         <StackPanel>
                             <Border Background="{StaticResource Cream}"
                                     Padding="18,12">
-                                <TextBlock Text="بيانات الضيف السابق"
+                                <TextBlock Text="♟  بيانات الضيف السابق"
                                            Style="{StaticResource SectionTitle}"/>
                             </Border>
 
-                            <TextBlock Text="سيتم تصميم شاشة البحث عن الضيوف السابقين بشكل منفصل."
-                                       Margin="22"
-                                       FontSize="15"
-                                       Foreground="#777777"/>
+                            <StackPanel Margin="22,18,22,20">
+
+                                <!-- SEARCH -->
+                                <TextBlock Text="ابحث بالاسم أو رقم الهاتف *"
+                                           Style="{StaticResource FieldLabel}"/>
+
+                                <Grid Margin="0,0,0,14">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="12"/>
+                                        <ColumnDefinition Width="140"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBox x:Name="GuestSearchTextBox"
+                                             Style="{StaticResource FormTextBox}"
+                                             KeyDown="GuestSearchTextBox_KeyDown"/>
+
+                                    <Button Grid.Column="2"
+                                            Content="🔍  بحث"
+                                            Height="43"
+                                            FontSize="15"
+                                            FontWeight="SemiBold"
+                                            Cursor="Hand"
+                                            Foreground="White"
+                                            Background="{StaticResource LightBrown}"
+                                            BorderThickness="0"
+                                            Click="SearchGuest_Click"/>
+                                </Grid>
+
+                                <TextBlock x:Name="SearchStatusText"
+                                           FontSize="14"
+                                           Foreground="#777777"
+                                           Margin="0,0,0,10"
+                                           Text="اكتب حرفين على الأقل ثم اضغط بحث."/>
+
+                                <!-- RESULTS -->
+                                <DataGrid x:Name="GuestResultsGrid"
+                                          AutoGenerateColumns="False"
+                                          IsReadOnly="True"
+                                          SelectionMode="Single"
+                                          SelectionUnit="FullRow"
+                                          CanUserAddRows="False"
+                                          CanUserDeleteRows="False"
+                                          CanUserResizeRows="False"
+                                          HeadersVisibility="Column"
+                                          GridLinesVisibility="Horizontal"
+                                          HorizontalGridLinesBrush="#E9E1D9"
+                                          BorderBrush="#E9E1D9"
+                                          Background="White"
+                                          RowHeight="38"
+                                          FontSize="14"
+                                          MaxHeight="260"
+                                          Margin="0,0,0,16"
+                                          SelectionChanged="GuestResultsGrid_SelectionChanged">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="الاسم"
+                                                            Binding="{Binding FullName}"
+                                                            Width="2*"/>
+                                        <DataGridTextColumn Header="الهاتف"
+                                                            Binding="{Binding Phone}"
+                                                            Width="*"/>
+                                        <DataGridTextColumn Header="المحافظة"
+                                                            Binding="{Binding GovernorateName}"
+                                                            Width="*"/>
+                                        <DataGridTextColumn Header="الكنيسة"
+                                                            Binding="{Binding GuestChurch}"
+                                                            Width="*"/>
+                                        <DataGridTextColumn Header="عدد الحجوزات"
+                                                            Binding="{Binding ReservationCount}"
+                                                            Width="Auto"/>
+                                        <DataGridTextColumn Header="آخر زيارة"
+                                                            Binding="{Binding LastVisitText}"
+                                                            Width="Auto"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+
+                                <!-- SELECTED GUEST -->
+                                <Border x:Name="SelectedGuestCard"
+                                        Background="#F1F5FC"
+                                        BorderBrush="#8CB1F4"
+                                        BorderThickness="1"
+                                        CornerRadius="6"
+                                        Padding="16,12"
+                                        Margin="0,0,0,18"
+                                        Visibility="Collapsed">
+                                    <TextBlock x:Name="SelectedGuestText"
+                                               FontSize="16"
+                                               FontWeight="SemiBold"
+                                               TextWrapping="Wrap"/>
+                                </Border>
+
+                                <TextBlock Text="ملاحظات"
+                                           Style="{StaticResource FieldLabel}"/>
+
+                                <TextBox x:Name="PreviousNotesTextBox"
+                                         Style="{StaticResource FormTextBox}"
+                                         Height="78"
+                                         AcceptsReturn="True"
+                                         TextWrapping="Wrap"
+                                         VerticalContentAlignment="Top"
+                                         VerticalScrollBarVisibility="Auto"/>
+                            </StackPanel>
                         </StackPanel>
                     </Border>
 
-                    <!-- BUTTONS -->
+                        <!-- BUTTONS -->
                     <Grid Margin="0,0,0,10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>

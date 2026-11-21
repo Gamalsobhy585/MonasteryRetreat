@@ -7,21 +7,31 @@ using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.EntityFrameworkCore;
 using MonasteryRetreat.Infrastructure.Persistence;
+using MonasteryRetreat.Application.Guests;
 using MonasteryRetreat.Application.Reservations;
 namespace MonasteryRetreat.Desktop.Views.Reservations;
 
 public partial class NewReservationWindow : Window
 {
     private readonly ICreateReservationService _createReservationService;
+    private readonly IGuestSearchService _guestSearchService;
     private bool _isSaving;
+    private bool _isSearching;
+    private GuestSummary? _selectedGuest;
 
     public NewReservationWindow(
-        ICreateReservationService createReservationService)
+        ICreateReservationService createReservationService,
+        IGuestSearchService guestSearchService)
     {
         _createReservationService =
             createReservationService
             ?? throw new ArgumentNullException(
                 nameof(createReservationService));
+
+        _guestSearchService =
+            guestSearchService
+            ?? throw new ArgumentNullException(
+                nameof(guestSearchService));
 
         InitializeComponent();
         InitializeDefaults();
@@ -108,8 +118,96 @@ public partial class NewReservationWindow : Window
         GovernorateComboBox.SelectedIndex = -1;
     }
 
-    private bool TryBuildReservation(
-        out NewReservationInput? input)
+    private async void SearchGuest_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        await SearchGuestsAsync();
+    }
+
+    private async void GuestSearchTextBox_KeyDown(
+        object sender,
+        System.Windows.Input.KeyEventArgs e)
+    {
+        if (e.Key == System.Windows.Input.Key.Enter)
+        {
+            e.Handled = true;
+            await SearchGuestsAsync();
+        }
+    }
+
+    private async Task SearchGuestsAsync()
+    {
+        if (_isSearching)
+            return;
+
+        string term = GuestSearchTextBox.Text.Trim();
+
+        if (term.Length < 2)
+        {
+            SearchStatusText.Text = "اكتب حرفين على الأقل ثم اضغط بحث.";
+            return;
+        }
+
+        try
+        {
+            _isSearching = true;
+            SearchStatusText.Text = "جاري البحث...";
+
+            IReadOnlyList<GuestSummary> results =
+                await _guestSearchService.SearchAsync(term);
+
+            GuestResultsGrid.ItemsSource = results;
+            ClearSelectedGuest();
+
+            SearchStatusText.Text = results.Count == 0
+                ? "لا توجد نتائج. تأكد من الاسم أو الرقم، أو اختر \"أول مرة\" لتسجيل ضيف جديد."
+                : $"تم العثور على {results.Count} ضيف — اختر الضيف من القائمة.";
+        }
+        catch (Exception ex)
+        {
+            SearchStatusText.Text = string.Empty;
+
+            MessageBox.Show(
+                $"حدث خطأ أثناء البحث:\n{ex.Message}",
+                "خطأ",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
+        finally
+        {
+            _isSearching = false;
+        }
+    }
+
+    private void GuestResultsGrid_SelectionChanged(
+        object sender,
+        System.Windows.Controls.SelectionChangedEventArgs e)
+    {
+        if (GuestResultsGrid.SelectedItem is GuestSummary guest)
+        {
+            _selectedGuest = guest;
+
+            SelectedGuestText.Text =
+                $"الضيف المختار: {guest.FullName}  |  {guest.Phone}";
+
+            SelectedGuestCard.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            ClearSelectedGuest();
+        }
+    }
+
+    private void ClearSelectedGuest()
+    {
+        _selectedGuest = null;
+        SelectedGuestText.Text = string.Empty;
+        SelectedGuestCard.Visibility = Visibility.Collapsed;
+    }
+
+    private bool TryBuildExistingGuestReservation(
+        out ExistingGuestReservationInput? input)
     {
         input = null;
 
@@ -128,9 +226,41 @@ public partial class NewReservationWindow : Window
             return false;
         }
 
-        if (PreviousGuestRadio.IsChecked == true)
+        if (_selectedGuest == null)
         {
-            ShowError("شاشة الضيف السابق لم تُنفذ بعد");
+            ShowError("يرجى البحث عن الضيف واختياره من القائمة");
+            GuestSearchTextBox.Focus();
+            return false;
+        }
+
+        input = new ExistingGuestReservationInput
+        {
+            GuestId = _selectedGuest.Id,
+            ExpectedArrival = arrival.Date,
+            ExpectedDeparture = departure.Date,
+            Notes = PreviousNotesTextBox.Text.Trim()
+        };
+
+        return true;
+    }
+
+    private bool TryBuildReservation(
+        out NewReservationInput? input)
+    {
+        input = null;
+
+        if (ArrivalDatePicker.SelectedDate
+                is not DateTime arrival ||
+            DepartureDatePicker.SelectedDate
+                is not DateTime departure)
+        {
+            ShowError("يرجى تحديد تاريخ الوصول والمغادرة");
+            return false;
+        }
+
+        if (departure <= arrival)
+        {
+            ShowError("تاريخ المغادرة يجب أن يكون بعد تاريخ الوصول");
             return false;
         }
 
@@ -198,13 +328,13 @@ public partial class NewReservationWindow : Window
         object sender,
         RoutedEventArgs e)
     {
-        await SubmitReservationAsync(false);
+        await SubmitReservationAsync();
     }
     private async void SaveAndAdd_Click(
       object sender,
       RoutedEventArgs e)
     {
-        await SubmitReservationAsync(true);
+        await SubmitReservationAsync();
     }
     private void ResetForm()
     {
@@ -217,6 +347,13 @@ public partial class NewReservationWindow : Window
 
         // Governorate
         GovernorateComboBox.SelectedIndex = -1;
+
+        // Previous-guest search state
+        GuestSearchTextBox.Clear();
+        PreviousNotesTextBox.Clear();
+        GuestResultsGrid.ItemsSource = null;
+        ClearSelectedGuest();
+        SearchStatusText.Text = "اكتب حرفين على الأقل ثم اضغط بحث.";
 
         // Guest type
         FirstTimeRadio.IsChecked = true;
@@ -232,19 +369,37 @@ public partial class NewReservationWindow : Window
         FullNameTextBox.Focus();
     }
 
-    private async Task SubmitReservationAsync(bool addAnother)
+    private async Task SubmitReservationAsync()
     {
         if (_isSaving)
             return;
 
-        if (!TryBuildReservation(out var input))
+        bool isPreviousGuest = PreviousGuestRadio.IsChecked == true;
+
+        NewReservationInput? newGuestInput = null;
+        ExistingGuestReservationInput? existingGuestInput = null;
+
+        bool valid = isPreviousGuest
+            ? TryBuildExistingGuestReservation(out existingGuestInput)
+            : TryBuildReservation(out newGuestInput);
+
+        if (!valid)
             return;
 
         try
         {
             _isSaving = true;
 
-            await _createReservationService.CreateAsync(input!);
+            if (isPreviousGuest)
+            {
+                await _createReservationService
+                    .CreateForExistingGuestAsync(existingGuestInput!);
+            }
+            else
+            {
+                await _createReservationService
+                    .CreateAsync(newGuestInput!);
+            }
 
             MessageBox.Show(
                 "تم حفظ الحجز بنجاح.",
@@ -252,14 +407,10 @@ public partial class NewReservationWindow : Window
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
 
-            if (addAnother)
-            {
-                ResetForm();
-            }
-            else
-            {
-                Close();
-            }
+            // Stay on this screen (it is the main window, so closing it
+            // would exit the whole application) and get ready for the
+            // next reservation.
+            ResetForm();
         }
         catch (Exception ex)
         {
@@ -287,7 +438,7 @@ public partial class NewReservationWindow : Window
 
         if (result == MessageBoxResult.Yes)
         {
-            Close();
+            ResetForm();
         }
     }
 

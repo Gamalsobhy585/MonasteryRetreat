@@ -95,4 +95,56 @@ public sealed class CreateReservationService
 
         return reservation.Id;
     }
+
+    public async Task<long> CreateForExistingGuestAsync(
+        ExistingGuestReservationInput input,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(input);
+
+        if (input.ExpectedDeparture.Date <=
+            input.ExpectedArrival.Date)
+        {
+            throw new ArgumentException(
+                "Departure must be after arrival.");
+        }
+
+        bool guestExists = await _context.Guests
+            .AnyAsync(g => g.Id == input.GuestId, cancellationToken);
+
+        if (!guestExists)
+        {
+            throw new ArgumentException(
+                "The selected guest no longer exists.");
+        }
+
+        var now = DateTime.UtcNow;
+
+        var reservation = new Reservation
+        {
+            GuestId = input.GuestId,
+
+            ExpectedArrivalDate =
+                DateOnly.FromDateTime(input.ExpectedArrival),
+
+            ExpectedDepartureDate =
+                DateOnly.FromDateTime(input.ExpectedDeparture),
+
+            Status = "pending",
+            Source = "phone",
+
+            Notes = string.IsNullOrWhiteSpace(input.Notes)
+                ? null
+                : input.Notes.Trim(),
+
+            CreatedAt = now,
+            UpdatedAt = now
+        };
+
+        _context.Reservations.Add(reservation);
+
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return reservation.Id;
+    }
 }
