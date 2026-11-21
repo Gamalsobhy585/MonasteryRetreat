@@ -492,6 +492,41 @@ namespace MonasteryRetreat.Infrastructure.Persistence.Migrations
                     b.ToTable("room_assignments", (string)null);
                 });
 
+            modelBuilder.Entity("MonasteryRetreat.Domain.Entities.SpeakerAssignment", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateOnly>("SpeakingDate")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("speaking_date");
+
+                    b.Property<string>("SpeakerName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("speaker_name");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_speaker_assignments");
+
+                    b.HasIndex("SpeakingDate")
+                        .IsUnique()
+                        .HasDatabaseName("ix_speaker_assignments_speaking_date");
+
+                    b.ToTable("speaker_assignments", (string)null);
+                });
+
             modelBuilder.Entity("MonasteryRetreat.Domain.Entities.Stay", b =>
                 {
                     b.Property<long>("Id")
