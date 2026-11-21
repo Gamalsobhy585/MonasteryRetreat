@@ -55,11 +55,17 @@ public sealed class ReservationListItem
     public DateOnly ExpectedArrival { get; set; }
     public DateOnly ExpectedDeparture { get; set; }
 
+    /// <summary>UTC timestamp recorded when arrival was confirmed; absent before check-in.</summary>
+    public DateTime? ActualArrivalAt { get; set; }
+
     public ReservationState State { get; set; }
 
     public string? Notes { get; set; }
 
     public string ArrivalText => ExpectedArrival.ToString("dd/MM/yyyy");
+    public string ActualArrivalText => ActualArrivalAt.HasValue
+        ? ActualArrivalAt.Value.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+        : "—";
     public string DepartureText => ExpectedDeparture.ToString("dd/MM/yyyy");
 
     public int Nights =>

@@ -294,6 +294,9 @@
                             <DataGridTextColumn Header="الوصول"
                                                 Binding="{Binding ArrivalText}"
                                                 Width="Auto"/>
+                            <DataGridTextColumn Header="تاريخ الوصول الفعلي"
+                                                Binding="{Binding ActualArrivalText}"
+                                                Width="Auto"/>
                             <DataGridTextColumn Header="المغادرة"
                                                 Binding="{Binding DepartureText}"
                                                 Width="Auto"/>
