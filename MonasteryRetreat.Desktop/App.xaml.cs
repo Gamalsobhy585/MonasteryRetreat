@@ -8,6 +8,7 @@ using MonasteryRetreat.Desktop.Views.Reservations;
 using MonasteryRetreat.Desktop.Views.Liturgy;
 using MonasteryRetreat.Desktop.Views.Custody;
 using MonasteryRetreat.Desktop.Views.Speakers;
+using MonasteryRetreat.Desktop.Views.Meals;
 
 namespace MonasteryRetreat.Desktop;
 
@@ -53,6 +54,9 @@ public partial class App : System.Windows.Application
             var speakersPage = new SpeakerDistributionPage(
                 new SpeakerAssignmentService(db));
 
+            var mealsPage = new MealsPage(
+                new DailyMealMenuService(db));
+
             // Load governorates from SQLite.
             await newReservationPage.LoadGovernoratesAsync(db);
 
@@ -62,7 +66,8 @@ public partial class App : System.Windows.Application
                 accommodationPage,
                 liturgyPage,
                 custodyPage,
-                speakersPage);
+                speakersPage,
+                mealsPage);
 
             window.Closed += (_, _) => db.Dispose();
 
