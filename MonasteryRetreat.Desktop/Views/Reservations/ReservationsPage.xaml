@@ -1,7 +1,7 @@
 ﻿<UserControl x:Class="MonasteryRetreat.Desktop.Views.Reservations.ReservationsPage"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             Background="#FFFFFF">
+             Background="{StaticResource Cream}">
 
     <UserControl.Resources>
 
@@ -16,6 +16,7 @@
             <Setter Property="Foreground" Value="{StaticResource Brown}"/>
             <Setter Property="BorderBrush" Value="{StaticResource BorderBrushCustom}"/>
             <Setter Property="BorderThickness" Value="1"/>
+            <Style.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter Property="Opacity" Value="0.80"/></Trigger></Style.Triggers>
         </Style>
 
         <Style x:Key="StatCard" TargetType="Border">
@@ -33,7 +34,7 @@
         <Style x:Key="StatLabel" TargetType="TextBlock">
             <Setter Property="FontSize" Value="17"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Foreground" Value="#242424"/>
+            <Setter Property="Foreground" Value="#2F2A24"/>
         </Style>
 
         <Style x:Key="StatHint" TargetType="TextBlock">
@@ -51,7 +52,7 @@
         </Grid.RowDefinitions>
 
         <!-- TOP BAR -->
-        <Border Grid.Row="0" Background="#EEE0D3" Padding="25,0">
+        <Border Grid.Row="0" Background="#E8F0F4" Padding="25,0">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -84,12 +85,12 @@
                 <TextBlock Text="الحجوزات"
                            FontSize="28"
                            FontWeight="Bold"
-                           Foreground="#161616"
+                           Foreground="#2F2A24"
                            Margin="0,0,0,5"/>
 
                 <TextBlock Text="متابعة حجوزات اليوم والقادمة والسابقة، وتأكيد الوصول وإنهاء الإقامة"
                            FontSize="16"
-                           Foreground="#555555"/>
+                           Foreground="#6E655B"/>
             </StackPanel>
 
             <!-- CARDS -->
@@ -276,8 +277,8 @@
                               CanUserResizeRows="False"
                               HeadersVisibility="Column"
                               GridLinesVisibility="All"
-                              HorizontalGridLinesBrush="#E3D9CE"
-                              VerticalGridLinesBrush="#E3D9CE"
+                              HorizontalGridLinesBrush="#D8D0C4"
+                              VerticalGridLinesBrush="#D8D0C4"
                               BorderThickness="0"
                               Background="White"
                               RowHeight="46"
