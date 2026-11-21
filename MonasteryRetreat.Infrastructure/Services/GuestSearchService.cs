@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MonasteryRetreat.Application.Guests;
 using MonasteryRetreat.Infrastructure.Persistence;
 
@@ -24,6 +24,9 @@ public sealed class GuestSearchService : IGuestSearchService
         if (term.Length < 2)
             return Array.Empty<GuestSummary>();
 
+        // "Last visit" only counts stays that have already started.
+        var today = DateOnly.FromDateTime(DateTime.Today);
+
         var guests = await _context.Guests
             .AsNoTracking()
             .Where(g => g.FullName.Contains(term) ||
@@ -41,6 +44,7 @@ public sealed class GuestSearchService : IGuestSearchService
                 g.GuestChurch,
                 ReservationCount = g.Reservations.Count,
                 LastArrival = g.Reservations
+                    .Where(r => r.ExpectedArrivalDate < today)
                     .OrderByDescending(r => r.ExpectedArrivalDate)
                     .Select(r => (DateOnly?)r.ExpectedArrivalDate)
                     .FirstOrDefault()

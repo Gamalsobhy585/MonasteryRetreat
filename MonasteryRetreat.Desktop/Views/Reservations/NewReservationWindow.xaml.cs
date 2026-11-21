@@ -283,6 +283,15 @@ public partial class NewReservationWindow : Window
             return false;
         }
 
+        phone = EgyptianPhone.Normalize(phone);
+
+        if (!EgyptianPhone.IsValid(phone))
+        {
+            ShowError(EgyptianPhone.ErrorMessage);
+            PhoneTextBox.Focus();
+            return false;
+        }
+
         if (GovernorateComboBox.SelectedItem
             is not GovernorateOption governorate)
         {
@@ -411,6 +420,10 @@ public partial class NewReservationWindow : Window
             // would exit the whole application) and get ready for the
             // next reservation.
             ResetForm();
+        }
+        catch (ReservationValidationException ex)
+        {
+            ShowError(ex.Message);
         }
         catch (Exception ex)
         {

@@ -43,6 +43,24 @@ public sealed class CreateReservationService
             throw new ArgumentException("Invalid guest age.");
         }
 
+        string phone = EgyptianPhone.Normalize(input.Phone);
+
+        if (!EgyptianPhone.IsValid(phone))
+        {
+            throw new ReservationValidationException(
+                EgyptianPhone.ErrorMessage);
+        }
+
+        bool phoneTaken = await _context.Guests
+            .AnyAsync(g => g.Phone == phone, cancellationToken);
+
+        if (phoneTaken)
+        {
+            throw new ReservationValidationException(
+                "رقم الهاتف مسجل بالفعل لضيف آخر. " +
+                "اختر \"ضيف سابق\" للحجز له.");
+        }
+
         bool governorateExists =
             await _context.Governorates
                 .AnyAsync(
@@ -60,7 +78,7 @@ public sealed class CreateReservationService
         var guest = new Guest
         {
             FullName = input.FullName.Trim(),
-            Phone = input.Phone.Trim(),
+            Phone = phone,
             GovernorateId = input.GovernorateId,
             GuestChurch = input.GuestChurch.Trim(),
             CreatedAt = now,
@@ -116,6 +134,33 @@ public sealed class CreateReservationService
         {
             throw new ArgumentException(
                 "The selected guest no longer exists.");
+        }
+
+        var arrival = DateOnly.FromDateTime(input.ExpectedArrival);
+        var departure = DateOnly.FromDateTime(input.ExpectedDeparture);
+
+        // Two stays overlap, even partially, when each one starts before
+        // the other ends. Leaving on the day another stay starts is allowed.
+        var conflict = await _context.Reservations
+            .AsNoTracking()
+            .Where(r => r.GuestId == input.GuestId &&
+                        r.Status != "cancelled" &&
+                        r.ExpectedArrivalDate < departure &&
+                        r.ExpectedDepartureDate > arrival)
+            .OrderBy(r => r.ExpectedArrivalDate)
+            .Select(r => new
+            {
+                r.ExpectedArrivalDate,
+                r.ExpectedDepartureDate
+            })
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (conflict != null)
+        {
+            throw new ReservationValidationException(
+                "لدى هذا الضيف حجز آخر يتداخل مع نفس الفترة " +
+                $"(من {conflict.ExpectedArrivalDate:dd/MM/yyyy} " +
+                $"إلى {conflict.ExpectedDepartureDate:dd/MM/yyyy}).");
         }
 
         var now = DateTime.UtcNow;
