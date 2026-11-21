@@ -258,7 +258,6 @@ public partial class NewReservationWindow : Window
             }
             else
             {
-                DialogResult = true;
                 Close();
             }
         }
