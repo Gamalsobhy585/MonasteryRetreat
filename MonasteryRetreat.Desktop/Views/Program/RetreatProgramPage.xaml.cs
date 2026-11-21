@@ -144,6 +144,39 @@ public partial class RetreatProgramPage : UserControl
     private async void Refresh_Click(object sender, RoutedEventArgs e)
         => await RefreshAsync();
 
+    private async void Sample_Click(object sender, RoutedEventArgs e)
+    {
+        if (_rows.Count > 0)
+        {
+            MessageBox.Show("يوجد برنامج محفوظ بالفعل. لا يمكن تحميل النموذج فوق البيانات الحالية.",
+                "برنامج الخلوة", MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
+        if (MessageBox.Show(
+                "سيتم تحميل نموذج قابل للتعديل مستوحى من الصورة، ومواعيده تحتاج إلى مراجعتك قبل الطباعة. هل تريد المتابعة؟",
+                "تحميل النموذج", MessageBoxButton.YesNo, MessageBoxImage.Question)
+            != MessageBoxResult.Yes) return;
+
+        ContentRoot.IsEnabled = false;
+        try
+        {
+            if (!await _service.LoadSampleAsync())
+            {
+                MessageBox.Show("يوجد برنامج محفوظ أو مؤرشف بالفعل.", "برنامج الخلوة");
+                return;
+            }
+            await RefreshAsync();
+            ResetEditor();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"تعذر تحميل النموذج:\\n{ex.Message}",
+                "خطأ", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        finally { ContentRoot.IsEnabled = true; }
+    }
+
     private void Print_Click(object sender, RoutedEventArgs e)
     {
         if (_rows.Count == 0)
