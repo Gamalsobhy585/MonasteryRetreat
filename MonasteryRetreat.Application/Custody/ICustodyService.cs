@@ -5,6 +5,10 @@ public interface ICustodyService
     Task<CustodyOverview> GetOverviewAsync(
         CancellationToken cancellationToken = default);
 
+    Task<CustodyReturnedPage> GetReturnedHistoryAsync(
+        int page, int pageSize = 20,
+        CancellationToken cancellationToken = default);
+
     Task AddAsync(
         long stayId,
         string description,
