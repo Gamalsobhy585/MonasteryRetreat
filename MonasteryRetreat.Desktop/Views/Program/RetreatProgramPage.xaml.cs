@@ -250,7 +250,7 @@ public partial class RetreatProgramPage : UserControl
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"تعذر عرض معاينة الطباعة:\\n{ex.Message}",
+            MessageBox.Show($"تعذر عرض معاينة الطباعة:\n{ex.Message}",
                 "خطأ", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
@@ -271,7 +271,7 @@ public partial class RetreatProgramPage : UserControl
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"تعذرت الطباعة:\\n{ex.Message}",
+            MessageBox.Show($"تعذرت الطباعة:\n{ex.Message}",
                 "خطأ", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
