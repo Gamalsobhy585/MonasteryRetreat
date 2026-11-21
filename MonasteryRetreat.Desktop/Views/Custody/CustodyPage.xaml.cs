@@ -9,6 +9,8 @@ public partial class CustodyPage : UserControl
     private readonly ICustodyService _service;
     private bool _isRefreshing;
     private bool _refreshQueued;
+    private int _historyPage = 1;
+    private bool _historyLoading;
 
     public CustodyPage(ICustodyService service)
     {
@@ -42,6 +44,9 @@ public partial class CustodyPage : UserControl
                 OutstandingCountText.Text = overview.OutstandingCount.ToString();
                 EmptyText.Visibility = overview.Items.Count == 0
                     ? Visibility.Visible : Visibility.Collapsed;
+
+                if (ReturnedHistoryExpander.IsExpanded)
+                    await LoadReturnedHistoryAsync();
             } while (_refreshQueued);
         }
         catch (Exception ex)
@@ -53,6 +58,54 @@ public partial class CustodyPage : UserControl
         {
             _isRefreshing = false;
         }
+    }
+
+    private async Task LoadReturnedHistoryAsync()
+    {
+        if (_historyLoading) return;
+        _historyLoading = true;
+        try
+        {
+            var result = await _service.GetReturnedHistoryAsync(_historyPage);
+            _historyPage = result.Page;
+            ReturnedGrid.ItemsSource = result.Items;
+            ReturnedEmptyText.Visibility = result.TotalCount == 0
+                ? Visibility.Visible : Visibility.Collapsed;
+            HistoryPageText.Text = $"صفحة {result.Page} من {result.TotalPages} — {result.TotalCount} سجل";
+            PreviousHistoryButton.IsEnabled = result.Page > 1;
+            NextHistoryButton.IsEnabled = result.Page < result.TotalPages;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"تعذر تحميل سجل المستردات:\n{ex.Message}",
+                "خطأ", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        finally
+        {
+            _historyLoading = false;
+        }
+    }
+
+    private async void ReturnedHistory_Expanded(object sender, RoutedEventArgs e)
+        => await LoadReturnedHistoryAsync();
+
+    private void ReturnedHistory_Collapsed(object sender, RoutedEventArgs e)
+    {
+        // Keep the currently selected page for the next expansion.
+    }
+
+    private async void HistoryPrevious_Click(object sender, RoutedEventArgs e)
+    {
+        if (_historyLoading || _historyPage <= 1) return;
+        _historyPage--;
+        await LoadReturnedHistoryAsync();
+    }
+
+    private async void HistoryNext_Click(object sender, RoutedEventArgs e)
+    {
+        if (_historyLoading || !NextHistoryButton.IsEnabled) return;
+        _historyPage++;
+        await LoadReturnedHistoryAsync();
     }
 
     private async void Refresh_Click(object sender, RoutedEventArgs e)
