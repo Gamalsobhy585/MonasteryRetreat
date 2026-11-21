@@ -5,6 +5,7 @@ using MonasteryRetreat.Infrastructure.Services;
 using MonasteryRetreat.Infrastructure.Persistence.Seeders;
 using MonasteryRetreat.Desktop.Views.Accommodation;
 using MonasteryRetreat.Desktop.Views.Reservations;
+using MonasteryRetreat.Desktop.Views.Liturgy;
 
 namespace MonasteryRetreat.Desktop;
 
@@ -41,13 +42,17 @@ public partial class App : System.Windows.Application
             var accommodationPage = new AccommodationPage(
                 new AccommodationService(db));
 
+            var liturgyPage = new LiturgyAssignmentsPage(
+                new LiturgyAssignmentService(db));
+
             // Load governorates from SQLite.
             await newReservationPage.LoadGovernoratesAsync(db);
 
             var window = new MainWindow(
                 newReservationPage,
                 reservationsPage,
-                accommodationPage);
+                accommodationPage,
+                liturgyPage);
 
             window.Closed += (_, _) => db.Dispose();
 
