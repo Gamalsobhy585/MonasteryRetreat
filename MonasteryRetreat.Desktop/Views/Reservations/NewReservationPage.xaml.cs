@@ -5,13 +5,14 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using Microsoft.EntityFrameworkCore;
 using MonasteryRetreat.Infrastructure.Persistence;
 using MonasteryRetreat.Application.Guests;
 using MonasteryRetreat.Application.Reservations;
 namespace MonasteryRetreat.Desktop.Views.Reservations;
 
-public partial class NewReservationWindow : Window
+public partial class NewReservationPage : UserControl
 {
     private readonly ICreateReservationService _createReservationService;
     private readonly IGuestSearchService _guestSearchService;
@@ -19,7 +20,7 @@ public partial class NewReservationWindow : Window
     private bool _isSearching;
     private GuestSummary? _selectedGuest;
 
-    public NewReservationWindow(
+    public NewReservationPage(
         ICreateReservationService createReservationService,
         IGuestSearchService guestSearchService)
     {

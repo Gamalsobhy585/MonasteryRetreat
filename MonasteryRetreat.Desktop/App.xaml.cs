@@ -13,7 +13,7 @@ public partial class App : System.Windows.Application
     {
         base.OnStartup(e);
 
-        // Close the app when the main window (reservation window) closes.
+        // Close the app when the main window (the shell) closes.
         ShutdownMode = ShutdownMode.OnMainWindowClose;
 
         try
@@ -28,20 +28,27 @@ public partial class App : System.Windows.Application
             // Apply migrations and seed initial data.
             await DatabaseSeeder.SeedAsync(db);
 
-            // Create reservation window.
-            var window = new NewReservationWindow(
+            // Pages share one database context: only one page is
+            // visible at a time and every call is awaited in turn.
+            var newReservationPage = new NewReservationPage(
                 new CreateReservationService(db),
                 new GuestSearchService(db));
 
-            window.Closed += (_, _) => db.Dispose();
+            var reservationsPage = new ReservationsPage(
+                new ReservationManagementService(db));
 
             // Load governorates from SQLite.
-            await window.LoadGovernoratesAsync(db);
+            await newReservationPage.LoadGovernoratesAsync(db);
+
+            var window = new MainWindow(
+                newReservationPage,
+                reservationsPage);
+
+            window.Closed += (_, _) => db.Dispose();
 
             // Set main application window.
             MainWindow = window;
 
-            // Display reservation window.
             window.Show();
         }
         catch (Exception ex)
