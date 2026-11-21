@@ -11,6 +11,6 @@ public sealed class NewReservationInput
     public long GovernorateId { get; set; }
     public string GuestChurch { get; set; } = string.Empty;
 
-    public int Age { get; set; }
+    public DateOnly DateOfBirth { get; set; }
     public string Notes { get; set; } = string.Empty;
 }
