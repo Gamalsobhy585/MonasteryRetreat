@@ -170,7 +170,7 @@ public partial class RetreatProgramPage : UserControl
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"تعذر تحميل النموذج:\\n{ex.Message}",
+            MessageBox.Show($"تعذر تحميل النموذج:\n{ex.Message}",
                 "خطأ", MessageBoxButton.OK, MessageBoxImage.Error);
         }
         finally { ContentRoot.IsEnabled = true; }
