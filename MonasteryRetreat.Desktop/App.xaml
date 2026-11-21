@@ -5,10 +5,17 @@
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
 
 
-        <SolidColorBrush x:Key="Brown" Color="#512F1C"/>
-        <SolidColorBrush x:Key="LightBrown" Color="#AA7953"/>
-        <SolidColorBrush x:Key="Cream" Color="#FAF6F1"/>
-        <SolidColorBrush x:Key="BorderBrushCustom" Color="#E9E1D9"/>
+        <SolidColorBrush x:Key="Brown" Color="#2F5D78"/>
+        <SolidColorBrush x:Key="PrimaryHover" Color="#24495F"/>
+        <SolidColorBrush x:Key="SidebarBrush" Color="#263F52"/>
+        <SolidColorBrush x:Key="SidebarNavBrush" Color="#344F63"/>
+        <SolidColorBrush x:Key="SidebarNavHoverBrush" Color="#466A80"/>
+        <SolidColorBrush x:Key="SoftBlueBrush" Color="#E8F0F4"/>
+        <SolidColorBrush x:Key="GoldBrush" Color="#B08A4A"/>
+        <SolidColorBrush x:Key="TextBrush" Color="#2F2A24"/>
+        <SolidColorBrush x:Key="LightBrown" Color="#B08A4A"/>
+        <SolidColorBrush x:Key="Cream" Color="#F7F4EE"/>
+        <SolidColorBrush x:Key="BorderBrushCustom" Color="#D8D0C4"/>
 
         <Style x:Key="SectionTitle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="19"/>
@@ -20,7 +27,7 @@
         <Style x:Key="FieldLabel" TargetType="TextBlock">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Foreground" Value="#242424"/>
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
             <Setter Property="Margin" Value="0,0,0,8"/>
         </Style>
 
@@ -29,7 +36,7 @@
             <Setter Property="FontSize" Value="15"/>
             <Setter Property="Padding" Value="12,8"/>
             <Setter Property="Background" Value="White"/>
-            <Setter Property="BorderBrush" Value="#D5DCE5"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrushCustom}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
@@ -39,7 +46,48 @@
             <Setter Property="FontSize" Value="15"/>
             <Setter Property="Padding" Value="8,5"/>
             <Setter Property="Background" Value="White"/>
-            <Setter Property="BorderBrush" Value="#D5DCE5"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrushCustom}"/>
+        </Style>
+
+        <!-- Default hover feedback preserves each button's semantic/background color. -->
+        <Style TargetType="Button">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="0.84"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Opacity" Value="0.72"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="NavButton" TargetType="Button">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="NavBorder"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="7"
+                                Padding="12,0">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="NavBorder" Property="Background"
+                                        Value="{StaticResource SidebarNavHoverBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="NavBorder" Property="Opacity" Value="0.8"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <Style x:Key="ActionButton" TargetType="Button">
@@ -51,6 +99,10 @@
             <Setter Property="Foreground" Value="{StaticResource Brown}"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Margin" Value="5"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True"><Setter Property="Opacity" Value="0.84"/></Trigger>
+                <Trigger Property="IsPressed" Value="True"><Setter Property="Opacity" Value="0.72"/></Trigger>
+            </Style.Triggers>
         </Style>
 
         <Style x:Key="Card" TargetType="Border">
