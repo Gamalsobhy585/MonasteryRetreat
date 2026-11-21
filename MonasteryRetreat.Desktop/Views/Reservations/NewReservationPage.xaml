@@ -230,8 +230,7 @@
                                         <DatePicker x:Name="DateOfBirthPicker"
                                                     Height="43"
                                                     FontSize="15"
-                                                    SelectedDateFormat="Short"
-/>
+                                                    SelectedDateFormat="Short"/>
                                     </StackPanel>
                                 </Grid>
 
