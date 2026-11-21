@@ -16,7 +16,12 @@ public partial class MealsPage : UserControl
         _service = service ?? throw new ArgumentNullException(nameof(service));
         InitializeComponent();
         MenuDatePicker.SelectedDate = DateTime.Today;
-        Loaded += async (_, _) => await RefreshAsync();
+        Loaded += async (_, _) =>
+        {
+            await RefreshAsync();
+            if (MenuDatePicker.SelectedDate is DateTime date)
+                LoadDate(DateOnly.FromDateTime(date));
+        };
     }
 
     private void LoadDate(DateOnly date)
