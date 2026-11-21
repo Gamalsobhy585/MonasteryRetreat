@@ -186,22 +186,109 @@ public partial class RetreatProgramPage : UserControl
 
         try
         {
+            // The Windows printer dialog cannot preview arbitrary WPF
+            // PrintDocument jobs. Show an actual paginated preview first.
+            var preview = new Window
+            {
+                Title = "معاينة طباعة برنامج الخلوة",
+                Owner = Window.GetWindow(this),
+                Width = 960,
+                Height = 780,
+                MinWidth = 650,
+                MinHeight = 480,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                FlowDirection = FlowDirection.RightToLeft,
+                Background = Brushes.White
+            };
+
+            var layout = new DockPanel();
+            var toolbar = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Margin = new Thickness(12)
+            };
+            DockPanel.SetDock(toolbar, Dock.Top);
+
+            var printButton = new Button
+            {
+                Content = "طباعة / حفظ PDF",
+                MinWidth = 160,
+                Height = 38,
+                Margin = new Thickness(0, 0, 10, 0),
+                Background = (Brush)System.Windows.Application.Current.Resources["Brown"],
+                Foreground = Brushes.White,
+                BorderThickness = new Thickness(0)
+            };
+            printButton.Click += (_, _) => PrintDocument();
+
+            var closeButton = new Button
+            {
+                Content = "إغلاق المعاينة",
+                MinWidth = 120,
+                Height = 38
+            };
+            closeButton.Click += (_, _) => preview.Close();
+            toolbar.Children.Add(printButton);
+            toolbar.Children.Add(closeButton);
+
+            var reader = new FlowDocumentReader
+            {
+                Document = BuildPrintDocument(793.7, 1122.5), // A4 at 96 DPI
+                ViewingMode = FlowDocumentReaderViewingMode.Page,
+                IsPageViewEnabled = true,
+                IsScrollViewEnabled = false,
+                IsTwoPageViewEnabled = false,
+                IsFindEnabled = false,
+                IsPrintEnabled = false,
+                Zoom = 85
+            };
+
+            layout.Children.Add(toolbar);
+            layout.Children.Add(reader);
+            preview.Content = layout;
+            preview.ShowDialog();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"تعذر عرض معاينة الطباعة:\n{ex.Message}",
+                "خطأ", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void PrintDocument()
+    {
+        try
+        {
             var dialog = new PrintDialog();
             if (dialog.ShowDialog() != true) return;
 
-            // A4 in WPF device-independent units (96 DPI); content can
-            // reflow over multiple pages if the program becomes long.
-            var document = new FlowDocument
-            {
-                FlowDirection = FlowDirection.RightToLeft,
-                PageWidth = dialog.PrintableAreaWidth,
-                PageHeight = dialog.PrintableAreaHeight,
-                PagePadding = new Thickness(35, 35, 35, 35),
-                ColumnWidth = double.PositiveInfinity,
-                FontFamily = new FontFamily("Segoe UI"),
-                FontSize = 15,
-                Foreground = Brushes.Black
-            };
+            var document = BuildPrintDocument(
+                dialog.PrintableAreaWidth, dialog.PrintableAreaHeight);
+            var paginator = ((IDocumentPaginatorSource)document).DocumentPaginator;
+            paginator.PageSize = new Size(
+                dialog.PrintableAreaWidth, dialog.PrintableAreaHeight);
+            dialog.PrintDocument(paginator, "برنامج الخلوة اليومي");
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"تعذرت الطباعة:\n{ex.Message}",
+                "خطأ", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private FlowDocument BuildPrintDocument(double pageWidth, double pageHeight)
+    {
+        var document = new FlowDocument
+        {
+            FlowDirection = FlowDirection.RightToLeft,
+            PageWidth = pageWidth,
+            PageHeight = pageHeight,
+            PagePadding = new Thickness(35, 35, 35, 35),
+            ColumnWidth = double.PositiveInfinity,
+            FontFamily = new FontFamily("Segoe UI"),
+            FontSize = 15,
+            Foreground = Brushes.Black
+        };
             document.Blocks.Add(new Paragraph(new Run("بيت دير السيدة العذراء السريان"))
             {
                 TextAlignment = TextAlignment.Center,
@@ -247,16 +334,7 @@ public partial class RetreatProgramPage : UserControl
                 Margin = new Thickness(0, 18, 0, 0)
             });
 
-            var paginator = ((IDocumentPaginatorSource)document).DocumentPaginator;
-            paginator.PageSize = new Size(
-                dialog.PrintableAreaWidth, dialog.PrintableAreaHeight);
-            dialog.PrintDocument(paginator, "برنامج الخلوة اليومي");
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"تعذرت الطباعة:\n{ex.Message}", "خطأ",
-                MessageBoxButton.OK, MessageBoxImage.Error);
-        }
+        return document;
     }
 
     private static TableCell PrintCell(string text, bool bold = false)
