@@ -283,38 +283,38 @@ public partial class RetreatProgramPage : UserControl
             FlowDirection = FlowDirection.RightToLeft,
             PageWidth = pageWidth,
             PageHeight = pageHeight,
-            PagePadding = new Thickness(35, 35, 35, 35),
+            PagePadding = new Thickness(22, 22, 22, 22),
             ColumnWidth = double.PositiveInfinity,
             FontFamily = new FontFamily("Segoe UI"),
-            FontSize = 15,
+            FontSize = 12,
             Foreground = Brushes.Black
         };
             document.Blocks.Add(new Paragraph(new Run("بيت دير السيدة العذراء السريان"))
             {
                 TextAlignment = TextAlignment.Center,
-                FontSize = 16,
+                FontSize = 13,
                 FontWeight = FontWeights.SemiBold,
-                Margin = new Thickness(0, 0, 0, 8)
+                Margin = new Thickness(0, 0, 0, 3)
             });
             document.Blocks.Add(new Paragraph(new Run("جدول نظام اليوم بالخلوة"))
             {
                 TextAlignment = TextAlignment.Center,
-                FontSize = 24,
+                FontSize = 18,
                 FontWeight = FontWeights.Bold,
-                Margin = new Thickness(0, 0, 0, 8)
+                Margin = new Thickness(0, 0, 0, 5)
             });
             document.Blocks.Add(new Paragraph(new Run("تنويه: برنامج يوم الأحد يختلف عن باقي الأيام."))
             {
                 TextAlignment = TextAlignment.Center,
-                FontSize = 13,
+                FontSize = 11,
                 FontWeight = FontWeights.SemiBold,
-                Margin = new Thickness(0, 0, 0, 18)
+                Margin = new Thickness(0, 0, 0, 9)
             });
 
             var table = new Table { CellSpacing = 0 };
-            table.Columns.Add(new TableColumn { Width = new GridLength(1, GridUnitType.Star) });
-            table.Columns.Add(new TableColumn { Width = new GridLength(1.5, GridUnitType.Star) });
-            table.Columns.Add(new TableColumn { Width = new GridLength(3, GridUnitType.Star) });
+            table.Columns.Add(new TableColumn { Width = new GridLength(1.25, GridUnitType.Star) });
+            table.Columns.Add(new TableColumn { Width = new GridLength(1.7, GridUnitType.Star) });
+            table.Columns.Add(new TableColumn { Width = new GridLength(3.8, GridUnitType.Star) });
             var group = new TableRowGroup();
             table.RowGroups.Add(group);
 
@@ -327,7 +327,7 @@ public partial class RetreatProgramPage : UserControl
             foreach (var row in _rows)
             {
                 var tr = new TableRow();
-                tr.Cells.Add(PrintCell(row.TimeText));
+                tr.Cells.Add(PrintCell(row.TimeText.Replace(" – ", "–")));
                 tr.Cells.Add(PrintCell(row.TitleAr));
                 // Older saved sample rows may still contain the redundant Sunday reminder.
                 // Suppress it only for printing, without altering user data.
@@ -341,9 +341,9 @@ public partial class RetreatProgramPage : UserControl
             document.Blocks.Add(table);
             document.Blocks.Add(new Paragraph(new Run("يرجى الالتزام بمواعيد برنامج الخلوة."))
             {
-                FontSize = 12,
+                FontSize = 10,
                 TextAlignment = TextAlignment.Center,
-                Margin = new Thickness(0, 18, 0, 0)
+                Margin = new Thickness(0, 8, 0, 0)
             });
 
         return document;
@@ -354,11 +354,12 @@ public partial class RetreatProgramPage : UserControl
         return new TableCell(new Paragraph(new Run(text))
         {
             Margin = new Thickness(0),
+            LineHeight = 15,
             TextAlignment = TextAlignment.Right,
             FontWeight = bold ? FontWeights.Bold : FontWeights.Normal
         })
         {
-            Padding = new Thickness(8, 9, 8, 9),
+            Padding = new Thickness(5, 4, 5, 4),
             BorderBrush = new SolidColorBrush(Color.FromRgb(216, 208, 196)),
             BorderThickness = new Thickness(0, 0, 0, 1)
         };
