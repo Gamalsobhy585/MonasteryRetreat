@@ -16,6 +16,9 @@ public class Guest
 
     public string? NationalId { get; set; }
 
+    // Nullable for guests created before date-of-birth collection was introduced.
+    public DateOnly? DateOfBirth { get; set; }
+
     public long? GovernorateId { get; set; }
     public Governorate? Governorate { get; set; }
 
