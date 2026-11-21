@@ -22,6 +22,7 @@ public class MonasteryDbContext : DbContext
     public DbSet<StayAdjustment> StayAdjustments => Set<StayAdjustment>();
 
     public DbSet<CustodyItem> CustodyItems => Set<CustodyItem>();
+    public DbSet<SpeakerAssignment> SpeakerAssignments => Set<SpeakerAssignment>();
 
     public DbSet<MonasteryChurch> MonasteryChurches
         => Set<MonasteryChurch>();
