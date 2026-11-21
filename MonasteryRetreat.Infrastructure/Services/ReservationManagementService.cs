@@ -313,6 +313,14 @@ public sealed class ReservationManagementService
         reservation.Status = Completed;
         reservation.UpdatedAt = now;
 
+        // Free the guest's bed.
+        var openAssignments = await _context.RoomAssignments
+            .Where(a => a.StayId == stay.Id && a.ReleasedAt == null)
+            .ToListAsync(cancellationToken);
+
+        foreach (var assignment in openAssignments)
+            assignment.ReleasedAt = now;
+
         _context.CheckoutRecords.Add(new CheckoutRecord
         {
             StayId = stay.Id,

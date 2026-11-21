@@ -1,0 +1,305 @@
+<UserControl x:Class="MonasteryRetreat.Desktop.Views.Accommodation.AccommodationPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#FFFFFF">
+
+    <UserControl.Resources>
+        <Style x:Key="RowButton" TargetType="Button">
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Padding" Value="14,0"/>
+            <Setter Property="Margin" Value="6,0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Background" Value="{StaticResource Brown}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="58"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- TOP BAR -->
+        <Border Grid.Row="0" Background="#EEE0D3" Padding="25,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="⌂   /   التسكين"
+                           FontSize="14"
+                           Foreground="{StaticResource Brown}"
+                           VerticalAlignment="Center"/>
+
+                <TextBlock x:Name="CurrentDateText"
+                           Grid.Column="1"
+                           FontSize="14"
+                           Foreground="{StaticResource Brown}"
+                           VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+
+            <StackPanel x:Name="ContentRoot" Margin="28,22,28,25">
+
+                <!-- HEADER -->
+                <TextBlock Text="التسكين"
+                           FontSize="28"
+                           FontWeight="Bold"
+                           Foreground="#161616"
+                           Margin="0,0,0,5"/>
+
+                <TextBlock Text="توزيع الضيوف المؤكَّد وصولهم على الغرف، ونقلهم من غرفة إلى أخرى"
+                           FontSize="16"
+                           Foreground="#555555"
+                           Margin="0,0,0,18"/>
+
+                <!-- ROOMS DIAGRAM -->
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <Border Background="{StaticResource Cream}"
+                                Padding="18,12"
+                                CornerRadius="8,8,0,0">
+                            <TextBlock Text="▦  الغرف والنزلاء الحاليون"
+                                       Style="{StaticResource SectionTitle}"/>
+                        </Border>
+
+                        <ItemsControl x:Name="RoomsItemsControl" Margin="22,18,8,4">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border x:Name="RoomCard"
+                                            Width="220"
+                                            MinHeight="150"
+                                            Margin="0,0,14,14"
+                                            Padding="14,12"
+                                            CornerRadius="8"
+                                            BorderThickness="1"
+                                            BorderBrush="#E9E1D9"
+                                            Background="#FAF6F1">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Name}"
+                                                       FontSize="16"
+                                                       FontWeight="Bold"
+                                                       Foreground="{StaticResource Brown}"
+                                                       TextWrapping="Wrap"/>
+
+                                            <TextBlock Text="{Binding RoomLabel}"
+                                                       FontSize="12"
+                                                       Foreground="#888888"
+                                                       Margin="0,2,0,8"/>
+
+                                            <Grid Margin="0,0,0,8">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="10"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <ProgressBar Height="8"
+                                                             Minimum="0"
+                                                             Maximum="{Binding Capacity, Mode=OneWay}"
+                                                             Value="{Binding Count, Mode=OneWay}"
+                                                             Foreground="{StaticResource LightBrown}"
+                                                             Background="#E9E1D9"
+                                                             BorderThickness="0"
+                                                             VerticalAlignment="Center"/>
+
+                                                <TextBlock Grid.Column="2"
+                                                           Text="{Binding CountText}"
+                                                           FontSize="13"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="#333333"/>
+                                            </Grid>
+
+                                            <ItemsControl ItemsSource="{Binding Occupants}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding StringFormat='• {0}'}"
+                                                                   FontSize="14"
+                                                                   Margin="0,1"
+                                                                   TextTrimming="CharacterEllipsis"/>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+
+                                            <TextBlock Text="لا يوجد نزلاء"
+                                                       FontSize="13"
+                                                       Foreground="#999999"
+                                                       Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVis}}"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding IsFull}" Value="True">
+                                            <Setter TargetName="RoomCard" Property="Background" Value="#FDEDED"/>
+                                            <Setter TargetName="RoomCard" Property="BorderBrush" Value="#E8B4B4"/>
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+
+                <!-- TABS -->
+                <Border Style="{StaticResource Card}" Padding="0,0,0,6">
+                    <TabControl BorderThickness="0" Background="White" FontSize="15">
+
+                        <!-- ASSIGN -->
+                        <TabItem Header="تسكين الضيوف" FontWeight="SemiBold">
+                            <Grid Margin="16,14,16,10">
+                                <DataGrid x:Name="UnassignedGrid"
+                                          AutoGenerateColumns="False"
+                                          IsReadOnly="True"
+                                          SelectionMode="Single"
+                                          SelectionUnit="FullRow"
+                                          CanUserAddRows="False"
+                                          CanUserDeleteRows="False"
+                                          CanUserResizeRows="False"
+                                          HeadersVisibility="Column"
+                                          GridLinesVisibility="All"
+                                          HorizontalGridLinesBrush="#E3D9CE"
+                                          VerticalGridLinesBrush="#E3D9CE"
+                                          BorderBrush="#E9E1D9"
+                                          Background="White"
+                                          RowHeight="48"
+                                          FontSize="14"
+                                          MinHeight="120"
+                                          MaxHeight="380">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="الاسم"
+                                                            Binding="{Binding GuestName}"
+                                                            Width="2*"/>
+                                        <DataGridTextColumn Header="الهاتف"
+                                                            Binding="{Binding Phone}"
+                                                            Width="1.2*"/>
+                                        <DataGridTextColumn Header="تاريخ الوصول"
+                                                            Binding="{Binding ArrivalText}"
+                                                            Width="Auto"/>
+                                        <DataGridTextColumn Header="المغادرة المتوقعة"
+                                                            Binding="{Binding DepartureText}"
+                                                            Width="Auto"/>
+
+                                        <DataGridTemplateColumn Header="الغرفة" Width="2*">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <ComboBox ItemsSource="{Binding AvailableRooms}"
+                                                              DisplayMemberPath="DisplayName"
+                                                              SelectedItem="{Binding SelectedRoom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                              Height="34"
+                                                              Margin="6,0"
+                                                              FontSize="14"
+                                                              VerticalContentAlignment="Center"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="الإجراء" Width="Auto">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button Content="تسكين"
+                                                            Style="{StaticResource RowButton}"
+                                                            Click="Assign_Click"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+
+                                <TextBlock x:Name="UnassignedEmptyText"
+                                           Text="لا يوجد ضيوف بانتظار التسكين."
+                                           FontSize="15"
+                                           Foreground="#888888"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           Visibility="Collapsed"/>
+                            </Grid>
+                        </TabItem>
+
+                        <!-- MOVE -->
+                        <TabItem Header="نقل بين الغرف" FontWeight="SemiBold">
+                            <Grid Margin="16,14,16,10">
+                                <DataGrid x:Name="AssignedGrid"
+                                          AutoGenerateColumns="False"
+                                          IsReadOnly="True"
+                                          SelectionMode="Single"
+                                          SelectionUnit="FullRow"
+                                          CanUserAddRows="False"
+                                          CanUserDeleteRows="False"
+                                          CanUserResizeRows="False"
+                                          HeadersVisibility="Column"
+                                          GridLinesVisibility="All"
+                                          HorizontalGridLinesBrush="#E3D9CE"
+                                          VerticalGridLinesBrush="#E3D9CE"
+                                          BorderBrush="#E9E1D9"
+                                          Background="White"
+                                          RowHeight="48"
+                                          FontSize="14"
+                                          MinHeight="120"
+                                          MaxHeight="380">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="الاسم"
+                                                            Binding="{Binding GuestName}"
+                                                            Width="2*"/>
+                                        <DataGridTextColumn Header="الهاتف"
+                                                            Binding="{Binding Phone}"
+                                                            Width="1.2*"/>
+                                        <DataGridTextColumn Header="الغرفة الحالية"
+                                                            Binding="{Binding CurrentRoomName}"
+                                                            Width="1.5*"/>
+
+                                        <DataGridTemplateColumn Header="النقل إلى" Width="2*">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <ComboBox ItemsSource="{Binding AvailableRooms}"
+                                                              DisplayMemberPath="DisplayName"
+                                                              SelectedItem="{Binding SelectedRoom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                              Height="34"
+                                                              Margin="6,0"
+                                                              FontSize="14"
+                                                              VerticalContentAlignment="Center"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="الإجراء" Width="Auto">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button Content="نقل"
+                                                            Style="{StaticResource RowButton}"
+                                                            Click="Move_Click"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+
+                                <TextBlock x:Name="AssignedEmptyText"
+                                           Text="لا يوجد ضيوف مسكّنون حاليًا."
+                                           FontSize="15"
+                                           Foreground="#888888"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           Visibility="Collapsed"/>
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

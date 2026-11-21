@@ -1,6 +1,7 @@
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using MonasteryRetreat.Desktop.Views.Accommodation;
 using MonasteryRetreat.Desktop.Views.Reservations;
 
 namespace MonasteryRetreat.Desktop;
@@ -19,13 +20,16 @@ public partial class MainWindow : Window
 
     private readonly NewReservationPage _newReservationPage;
     private readonly ReservationsPage _reservationsPage;
+    private readonly AccommodationPage _accommodationPage;
 
     public MainWindow(
         NewReservationPage newReservationPage,
-        ReservationsPage reservationsPage)
+        ReservationsPage reservationsPage,
+        AccommodationPage accommodationPage)
     {
         _newReservationPage = newReservationPage;
         _reservationsPage = reservationsPage;
+        _accommodationPage = accommodationPage;
 
         InitializeComponent();
 
@@ -37,6 +41,12 @@ public partial class MainWindow : Window
     {
         PageHost.Content = _reservationsPage;
         SetActive(ReservationsNavButton);
+    }
+
+    private void ShowAccommodation()
+    {
+        PageHost.Content = _accommodationPage;
+        SetActive(AccommodationNavButton);
     }
 
     private void ShowNewReservation()
@@ -52,6 +62,11 @@ public partial class MainWindow : Window
                 ? ActiveBrush
                 : InactiveBrush;
 
+        AccommodationNavButton.Background =
+            ReferenceEquals(active, AccommodationNavButton)
+                ? ActiveBrush
+                : InactiveBrush;
+
         NewReservationNavButton.Background =
             ReferenceEquals(active, NewReservationNavButton)
                 ? ActiveBrush
@@ -60,6 +75,9 @@ public partial class MainWindow : Window
 
     private void ReservationsNav_Click(object sender, RoutedEventArgs e)
         => ShowReservations();
+
+    private void AccommodationNav_Click(object sender, RoutedEventArgs e)
+        => ShowAccommodation();
 
     private void NewReservationNav_Click(object sender, RoutedEventArgs e)
         => ShowNewReservation();
