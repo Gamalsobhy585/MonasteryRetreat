@@ -1,4 +1,4 @@
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using MonasteryRetreat.Application.Reservations;
 using MonasteryRetreat.Domain.Entities;
@@ -29,7 +29,8 @@ public sealed class ReservationManagementService
     // Listing
     // ---------------------------------------------------------------
 
-    // Every reservation falls in exactly one of Present / Upcoming / Past.
+    // Every reservation falls in exactly one of
+    // Present / Upcoming / Past / Cancelled.
 
     private static Expression<Func<Reservation, bool>> IsPresent(
         DateOnly today) =>
@@ -47,9 +48,9 @@ public sealed class ReservationManagementService
 
     private static Expression<Func<Reservation, bool>> IsPast(
         DateOnly today) =>
-        r => r.Status == Cancelled ||
-             (r.Stay != null && r.Stay.Status != StayActive) ||
-             (r.Stay == null && r.ExpectedDepartureDate < today);
+        r => r.Status != Cancelled &&
+             ((r.Stay != null && r.Stay.Status != StayActive) ||
+              (r.Stay == null && r.ExpectedDepartureDate < today));
 
     public async Task<ReservationListResult> ListAsync(
         ReservationQuery query,
@@ -72,6 +73,10 @@ public sealed class ReservationManagementService
                 break;
             case ReservationPeriod.Past:
                 reservations = reservations.Where(IsPast(today));
+                break;
+            case ReservationPeriod.Cancelled:
+                reservations = reservations.Where(
+                    r => r.Status == Cancelled);
                 break;
         }
 
@@ -100,6 +105,7 @@ public sealed class ReservationManagementService
         // in the order guests arrive.
         bool newestFirst =
             query.Period == ReservationPeriod.Past ||
+            query.Period == ReservationPeriod.Cancelled ||
             query.Period == ReservationPeriod.All;
 
         var ordered = newestFirst

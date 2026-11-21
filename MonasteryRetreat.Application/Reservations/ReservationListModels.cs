@@ -1,4 +1,4 @@
-namespace MonasteryRetreat.Application.Reservations;
+﻿namespace MonasteryRetreat.Application.Reservations;
 
 public enum ReservationPeriod
 {
@@ -8,9 +8,13 @@ public enum ReservationPeriod
     /// <summary>Not cancelled, not arrived, arrival date after today.</summary>
     Upcoming,
 
-    /// <summary>Ended stays, cancelled reservations and no-shows.</summary>
+    /// <summary>Ended stays and no-shows (cancelled ones are not included).</summary>
     Past,
 
+    /// <summary>Cancelled reservations only.</summary>
+    Cancelled,
+
+    /// <summary>Everything, cancelled included.</summary>
     All
 }
 

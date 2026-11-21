@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows;
@@ -84,10 +84,10 @@ public partial class ReservationsPage : UserControl
 
         // A date range is meant to search across all periods, so the
         // default "present" period would hide what the user asked for.
-        if (PeriodComboBox.SelectedIndex != 3)
+        if (PeriodComboBox.SelectedIndex != PeriodComboBox.Items.Count - 1)
         {
             _suppressRefresh = true;
-            PeriodComboBox.SelectedIndex = 3;
+            PeriodComboBox.SelectedIndex = PeriodComboBox.Items.Count - 1;
             _suppressRefresh = false;
         }
 
