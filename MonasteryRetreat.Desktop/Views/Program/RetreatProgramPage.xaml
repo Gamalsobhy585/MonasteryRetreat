@@ -80,6 +80,11 @@
                         <Border Background="{StaticResource Cream}" Padding="18,12">
                             <DockPanel LastChildFill="True">
                                 <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                                    <Button Content="تحميل النموذج المقترح" Width="185" Height="36"
+                                            Background="{StaticResource Cream}"
+                                            Foreground="{StaticResource Brown}"
+                                            BorderBrush="{StaticResource BorderBrushCustom}"
+                                            Margin="6,0,0,0" Click="Sample_Click"/>
                                     <Button Content="طباعة البرنامج" Width="145" Height="36"
                                             Background="{StaticResource Brown}"
                                             Foreground="White" BorderThickness="0"
