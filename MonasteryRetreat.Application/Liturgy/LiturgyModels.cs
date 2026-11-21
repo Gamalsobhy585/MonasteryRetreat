@@ -38,7 +38,7 @@ public static class LiturgyRoles
         {
             [Mardat] = "شماس مردات",
             [Altar] = "شماس هيكل",
-            [Congregation] = "شماس شعب"
+            [Congregation] = " شعب"
         };
 }
 
