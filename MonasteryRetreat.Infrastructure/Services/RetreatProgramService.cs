@@ -23,6 +23,61 @@ public sealed class RetreatProgramService : IRetreatProgramService
             .ToListAsync(cancellationToken);
     }
 
+    /// <summary>
+    /// An optional editable example based on the photographed monastery schedule.
+    /// Never overwrites an existing, even archived, program.
+    /// </summary>
+    public async Task<bool> LoadSampleAsync(
+        CancellationToken cancellationToken = default)
+    {
+        if (await _db.RetreatProgramItems.AnyAsync(cancellationToken))
+            return false;
+
+        var sample = new (string Title, string? Note, int Hour, int Minute, int? EndHour, int? EndMinute)[]
+        {
+            ("التسبحة والاستيقاظ", "الاستيقاظ الساعة ٦:١٥ صباحًا. راجع مواعيد الأحد مع المسؤول.", 6, 15, null, null),
+            ("القداس", "يوميًا بحسب مواعيد القداسات، مع مراعاة برنامج السبت.", 7, 0, null, null),
+            ("الفطار", null, 9, 0, 9, 30),
+            ("فترة العمل", "تبدأ من الساعة العاشرة صباحًا.", 10, 0, null, null),
+            ("الغداء", "الساعة ١:٣٠ ظهرًا، مع اختلاف الأربعاء والجمعة وأيام الصيام.", 13, 30, null, null),
+            ("راحة", null, 14, 0, 16, 0),
+            ("صلاة الغروب والنوم", null, 16, 0, null, null),
+            ("تمشية (خلوة فردية)", null, 16, 30, 18, 0),
+            ("صلاة نصف الليل", "السبت له ترتيباته الخاصة.", 18, 15, null, null),
+            ("الكلمة الروحية", "أو حسب ميعاد الأب المتكلم.", 19, 0, null, null),
+            ("العشاء", "بعد الكلمة الروحية مباشرة.", 19, 30, null, null),
+            ("غلق باب الخلوة", "يوميًا الساعة العاشرة مساءً.", 22, 0, null, null)
+        };
+
+        var order = 10;
+        foreach (var row in sample)
+        {
+            _db.RetreatProgramItems.Add(new RetreatProgramItem
+            {
+                TitleAr = row.Title,
+                DescriptionAr = row.Note,
+                StartTime = new TimeOnly(row.Hour, row.Minute),
+                EndTime = row.EndHour.HasValue
+                    ? new TimeOnly(row.EndHour.Value, row.EndMinute!.Value)
+                    : null,
+                DisplayOrder = order,
+                IsActive = true
+            });
+            order += 10;
+        }
+
+        try
+        {
+            await _db.SaveChangesAsync(cancellationToken);
+            return true;
+        }
+        catch
+        {
+            _db.ChangeTracker.Clear();
+            throw;
+        }
+    }
+
     public async Task SaveAsync(
         SaveRetreatProgramItem input, CancellationToken cancellationToken = default)
     {
