@@ -7,6 +7,7 @@ using MonasteryRetreat.Desktop.Views.Liturgy;
 using MonasteryRetreat.Desktop.Views.Custody;
 using MonasteryRetreat.Desktop.Views.Speakers;
 using MonasteryRetreat.Desktop.Views.Meals;
+using MonasteryRetreat.Desktop.Views.Program;
 
 namespace MonasteryRetreat.Desktop;
 
@@ -29,6 +30,7 @@ public partial class MainWindow : Window
     private readonly CustodyPage _custodyPage;
     private readonly SpeakerDistributionPage _speakersPage;
     private readonly MealsPage _mealsPage;
+    private readonly RetreatProgramPage _programPage;
 
     public MainWindow(
         NewReservationPage newReservationPage,
@@ -37,7 +39,8 @@ public partial class MainWindow : Window
         LiturgyAssignmentsPage liturgyPage,
         CustodyPage custodyPage,
         SpeakerDistributionPage speakersPage,
-        MealsPage mealsPage)
+        MealsPage mealsPage,
+        RetreatProgramPage programPage)
     {
         _newReservationPage = newReservationPage;
         _reservationsPage = reservationsPage;
@@ -46,6 +49,7 @@ public partial class MainWindow : Window
         _custodyPage = custodyPage;
         _speakersPage = speakersPage;
         _mealsPage = mealsPage;
+        _programPage = programPage;
 
         InitializeComponent();
 
@@ -89,6 +93,12 @@ public partial class MainWindow : Window
         SetActive(MealsNavButton);
     }
 
+    private void ShowProgram()
+    {
+        PageHost.Content = _programPage;
+        SetActive(ProgramNavButton);
+    }
+
     private void ShowNewReservation()
     {
         PageHost.Content = _newReservationPage;
@@ -127,6 +137,11 @@ public partial class MainWindow : Window
                 ? ActiveBrush
                 : InactiveBrush;
 
+        ProgramNavButton.Background =
+            ReferenceEquals(active, ProgramNavButton)
+                ? ActiveBrush
+                : InactiveBrush;
+
         NewReservationNavButton.Background =
             ReferenceEquals(active, NewReservationNavButton)
                 ? ActiveBrush
@@ -150,6 +165,9 @@ public partial class MainWindow : Window
 
     private void MealsNav_Click(object sender, RoutedEventArgs e)
         => ShowMeals();
+
+    private void ProgramNav_Click(object sender, RoutedEventArgs e)
+        => ShowProgram();
 
     private void NewReservationNav_Click(object sender, RoutedEventArgs e)
         => ShowNewReservation();
