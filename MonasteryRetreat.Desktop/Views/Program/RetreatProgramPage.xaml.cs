@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Printing;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -195,9 +194,9 @@ public partial class RetreatProgramPage : UserControl
             var document = new FlowDocument
             {
                 FlowDirection = FlowDirection.RightToLeft,
-                PageWidth = 793.7,
-                PageHeight = 1122.5,
-                PagePadding = new Thickness(46, 48, 46, 48),
+                PageWidth = dialog.PrintableAreaWidth,
+                PageHeight = dialog.PrintableAreaHeight,
+                PagePadding = new Thickness(35, 35, 35, 35),
                 ColumnWidth = double.PositiveInfinity,
                 FontFamily = new FontFamily("Segoe UI"),
                 FontSize = 15,
@@ -219,9 +218,9 @@ public partial class RetreatProgramPage : UserControl
             });
 
             var table = new Table { CellSpacing = 0 };
-            table.Columns.Add(new TableColumn { Width = new GridLength(140) });
-            table.Columns.Add(new TableColumn { Width = new GridLength(180) });
-            table.Columns.Add(new TableColumn { Width = new GridLength(370) });
+            table.Columns.Add(new TableColumn { Width = new GridLength(1, GridUnitType.Star) });
+            table.Columns.Add(new TableColumn { Width = new GridLength(1.5, GridUnitType.Star) });
+            table.Columns.Add(new TableColumn { Width = new GridLength(3, GridUnitType.Star) });
             var group = new TableRowGroup();
             table.RowGroups.Add(group);
 
