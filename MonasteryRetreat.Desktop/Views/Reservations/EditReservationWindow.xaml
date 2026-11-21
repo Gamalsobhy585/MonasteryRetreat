@@ -8,7 +8,7 @@
         WindowStartupLocation="CenterOwner"
         FlowDirection="RightToLeft"
         FontFamily="Segoe UI"
-        Background="White"
+        Background="{StaticResource Cream}"
         Icon="/Assets/logo.ico">
 
     <StackPanel Margin="28,24,28,24">
