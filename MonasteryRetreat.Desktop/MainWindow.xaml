@@ -68,6 +68,18 @@
                         Margin="0,0,0,8"
                         Click="AccommodationNav_Click"/>
 
+                <Button x:Name="LiturgyNavButton"
+                        Content="⛪  توزيع القداسات"
+                        Height="54"
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        Foreground="White"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Style="{StaticResource NavButton}"
+                        Margin="0,0,0,8"
+                        Click="LiturgyNav_Click"/>
+
                 <Button x:Name="NewReservationNavButton"
                         Content="＋  حجز جديد"
                         Height="54"
