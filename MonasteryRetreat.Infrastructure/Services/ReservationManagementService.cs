@@ -124,6 +124,7 @@ public sealed class ReservationManagementService
                 r.ExpectedDepartureDate,
                 r.Status,
                 StayStatus = r.Stay != null ? r.Stay.Status : null,
+                ActualArrivalAt = r.Stay != null ? (DateTime?)r.Stay.ActualArrivalAt : null,
                 r.Notes
             })
             .ToListAsync(cancellationToken);
@@ -149,6 +150,7 @@ public sealed class ReservationManagementService
                 Phone = r.Phone,
                 ExpectedArrival = r.ExpectedArrivalDate,
                 ExpectedDeparture = r.ExpectedDepartureDate,
+                ActualArrivalAt = r.ActualArrivalAt,
                 State = state,
                 Notes = r.Notes,
                 CanConfirm =
