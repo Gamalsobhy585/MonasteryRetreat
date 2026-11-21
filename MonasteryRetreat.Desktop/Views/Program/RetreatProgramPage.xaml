@@ -1,0 +1,138 @@
+<UserControl x:Class="MonasteryRetreat.Desktop.Views.Program.RetreatProgramPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             FlowDirection="RightToLeft"
+             Background="{StaticResource Cream}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="58"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" Background="#E8F0F4" Padding="25,0">
+            <TextBlock Text="⌂   /   برنامج الخلوة" FontSize="14"
+                       Foreground="{StaticResource Brown}" VerticalAlignment="Center"/>
+        </Border>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel x:Name="ContentRoot" Margin="28,22,28,25">
+                <TextBlock Text="برنامج الخلوة اليومي" FontSize="28"
+                           FontWeight="Bold" Foreground="{StaticResource Brown}"/>
+                <TextBlock Text="البرنامج ثابت لكل أيام الخلوة. يمكنك إضافة الأنشطة وتعديلها وترتيبها وطباعتها."
+                           FontSize="15" Foreground="#6E655B" Margin="0,4,0,18"/>
+
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <Border Background="{StaticResource Cream}" Padding="18,12">
+                            <TextBlock x:Name="EditorTitle" Text="إضافة نشاط"
+                                       Style="{StaticResource SectionTitle}"/>
+                        </Border>
+                        <StackPanel Margin="20,18">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="النشاط *" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox x:Name="TitleBox" Style="{StaticResource FormTextBox}" MaxLength="150"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="من الساعة * (HH:mm)" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox x:Name="StartBox" Style="{StaticResource FormTextBox}"
+                                             FlowDirection="LeftToRight" TextAlignment="Center" Text="07:00"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="4">
+                                    <TextBlock Text="إلى الساعة (اختياري)" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox x:Name="EndBox" Style="{StaticResource FormTextBox}"
+                                             FlowDirection="LeftToRight" TextAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="6">
+                                    <TextBlock Text="ترتيب العرض" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox x:Name="OrderBox" Style="{StaticResource FormTextBox}"
+                                             Text="10" FlowDirection="LeftToRight" TextAlignment="Center"/>
+                                </StackPanel>
+                            </Grid>
+                            <TextBlock Text="تفاصيل أو استثناءات" Style="{StaticResource FieldLabel}"
+                                       Margin="0,16,0,8"/>
+                            <TextBox x:Name="DescriptionBox" Height="80" Padding="12,8"
+                                     TextWrapping="Wrap" AcceptsReturn="True" MaxLength="1000"
+                                     BorderBrush="{StaticResource BorderBrushCustom}"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+                                <Button Content="حفظ النشاط" Width="145" Height="42" Margin="0,0,8,0"
+                                        Background="{StaticResource Brown}" Foreground="White"
+                                        BorderThickness="0" Click="Save_Click"/>
+                                <Button Content="إلغاء التعديل" Width="130" Height="42"
+                                        Background="{StaticResource Cream}"
+                                        Foreground="{StaticResource Brown}"
+                                        BorderBrush="{StaticResource BorderBrushCustom}"
+                                        Click="CancelEdit_Click"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource Card}">
+                    <StackPanel>
+                        <Border Background="{StaticResource Cream}" Padding="18,12">
+                            <DockPanel LastChildFill="True">
+                                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                                    <Button Content="تحميل النموذج المقترح" Width="185" Height="36"
+                                            Background="{StaticResource Cream}"
+                                            Foreground="{StaticResource Brown}"
+                                            BorderBrush="{StaticResource BorderBrushCustom}"
+                                            Margin="6,0,0,0" Click="Sample_Click"/>
+                                    <Button Content="طباعة البرنامج" Width="145" Height="36"
+                                            Background="{StaticResource Brown}"
+                                            Foreground="White" BorderThickness="0"
+                                            Margin="6,0,0,0" Click="Print_Click"/>
+                                    <Button Content="تحديث" Width="90" Height="36"
+                                            Background="{StaticResource LightBrown}"
+                                            Foreground="White" BorderThickness="0"
+                                            Click="Refresh_Click"/>
+                                </StackPanel>
+                                <TextBlock Text="جدول نظام اليوم بالخلوة"
+                                           Style="{StaticResource SectionTitle}"/>
+                            </DockPanel>
+                        </Border>
+                        <TextBlock x:Name="EmptyText"
+                                   Text="لم يتم إدخال برنامج الخلوة بعد. أضف الأنشطة من النموذج أعلاه."
+                                   Visibility="Collapsed" Margin="20,15"
+                                   Foreground="#6E655B"/>
+                        <DataGrid x:Name="ProgramGrid"
+                                  Margin="18,14,18,20" MinHeight="190"
+                                  AutoGenerateColumns="False" IsReadOnly="True"
+                                  CanUserAddRows="False" CanUserDeleteRows="False"
+                                  RowHeight="56" GridLinesVisibility="Horizontal"
+                                  HorizontalGridLinesBrush="{StaticResource BorderBrushCustom}"
+                                  HeadersVisibility="Column">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="الترتيب" Binding="{Binding DisplayOrder}" Width="75"/>
+                                <DataGridTextColumn Header="الوقت" Binding="{Binding TimeText}" Width="135"/>
+                                <DataGridTextColumn Header="النشاط" Binding="{Binding TitleAr}" Width="1.2*"/>
+                                <DataGridTextColumn Header="التفاصيل / الاستثناءات"
+                                                    Binding="{Binding DescriptionAr}" Width="2*"/>
+                                <DataGridTemplateColumn Header="الإجراءات" Width="180">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Button Content="تعديل" Width="75" Height="32" Margin="4"
+                                                        Background="{StaticResource Brown}" Foreground="White"
+                                                        BorderThickness="0" Click="Edit_Click"/>
+                                                <Button Content="حذف" Width="70" Height="32" Margin="4"
+                                                        Foreground="#9B1C1C" Click="Delete_Click"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
