@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using MonasteryRetreat.Desktop.Views.Accommodation;
 using MonasteryRetreat.Desktop.Views.Reservations;
+using MonasteryRetreat.Desktop.Views.Liturgy;
 
 namespace MonasteryRetreat.Desktop;
 
@@ -21,15 +22,18 @@ public partial class MainWindow : Window
     private readonly NewReservationPage _newReservationPage;
     private readonly ReservationsPage _reservationsPage;
     private readonly AccommodationPage _accommodationPage;
+    private readonly LiturgyAssignmentsPage _liturgyPage;
 
     public MainWindow(
         NewReservationPage newReservationPage,
         ReservationsPage reservationsPage,
-        AccommodationPage accommodationPage)
+        AccommodationPage accommodationPage,
+        LiturgyAssignmentsPage liturgyPage)
     {
         _newReservationPage = newReservationPage;
         _reservationsPage = reservationsPage;
         _accommodationPage = accommodationPage;
+        _liturgyPage = liturgyPage;
 
         InitializeComponent();
 
@@ -47,6 +51,12 @@ public partial class MainWindow : Window
     {
         PageHost.Content = _accommodationPage;
         SetActive(AccommodationNavButton);
+    }
+
+    private void ShowLiturgy()
+    {
+        PageHost.Content = _liturgyPage;
+        SetActive(LiturgyNavButton);
     }
 
     private void ShowNewReservation()
@@ -67,6 +77,11 @@ public partial class MainWindow : Window
                 ? ActiveBrush
                 : InactiveBrush;
 
+        LiturgyNavButton.Background =
+            ReferenceEquals(active, LiturgyNavButton)
+                ? ActiveBrush
+                : InactiveBrush;
+
         NewReservationNavButton.Background =
             ReferenceEquals(active, NewReservationNavButton)
                 ? ActiveBrush
@@ -78,6 +93,9 @@ public partial class MainWindow : Window
 
     private void AccommodationNav_Click(object sender, RoutedEventArgs e)
         => ShowAccommodation();
+
+    private void LiturgyNav_Click(object sender, RoutedEventArgs e)
+        => ShowLiturgy();
 
     private void NewReservationNav_Click(object sender, RoutedEventArgs e)
         => ShowNewReservation();
