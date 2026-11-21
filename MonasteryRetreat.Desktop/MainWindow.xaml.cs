@@ -13,10 +13,10 @@ namespace MonasteryRetreat.Desktop;
 public partial class MainWindow : Window
 {
     private static readonly Brush ActiveBrush =
-        new SolidColorBrush(Color.FromRgb(0xAA, 0x79, 0x53));
+        (Brush)Application.Current.Resources["GoldBrush"];
 
     private static readonly Brush InactiveBrush =
-        new SolidColorBrush(Color.FromRgb(0x6B, 0x45, 0x2F));
+        (Brush)Application.Current.Resources["SidebarNavBrush"];
 
     private readonly NewReservationPage _newReservationPage;
     private readonly ReservationsPage _reservationsPage;
