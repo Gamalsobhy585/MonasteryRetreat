@@ -28,3 +28,12 @@ public sealed class CustodyOverview
     public List<CustodyItemRow> Items { get; init; } = new();
     public int OutstandingCount => Items.Count(item => item.IsOutstanding);
 }
+
+public sealed class CustodyReturnedPage
+{
+    public IReadOnlyList<CustodyItemRow> Items { get; init; } = Array.Empty<CustodyItemRow>();
+    public int TotalCount { get; init; }
+    public int Page { get; init; }
+    public int PageSize { get; init; }
+    public int TotalPages => Math.Max(1, (int)Math.Ceiling((double)TotalCount / PageSize));
+}
