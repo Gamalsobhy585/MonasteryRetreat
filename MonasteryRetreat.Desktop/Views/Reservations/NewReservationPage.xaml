@@ -224,12 +224,14 @@
                                     </StackPanel>
 
                                     <StackPanel Grid.Column="4">
-                                        <TextBlock Text="السن *"
+                                        <TextBlock Text="تاريخ الميلاد *"
                                                    Style="{StaticResource FieldLabel}"/>
 
-                                        <TextBox x:Name="AgeTextBox"
-                                                 Style="{StaticResource FormTextBox}"
-                                                 MaxLength="3"/>
+                                        <DatePicker x:Name="DateOfBirthPicker"
+                                                    Height="43"
+                                                    FontSize="15"
+                                                    SelectedDateFormat="Short"
+/>
                                     </StackPanel>
                                 </Grid>
 
