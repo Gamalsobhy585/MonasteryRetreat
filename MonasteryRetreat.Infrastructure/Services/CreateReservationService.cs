@@ -38,9 +38,13 @@ public sealed class CreateReservationService
                 "Departure must be after arrival.");
         }
 
-        if (input.Age < 1 || input.Age > 120)
+        var today = DateOnly.FromDateTime(DateTime.Today);
+        if (input.DateOfBirth == default ||
+            input.DateOfBirth > today ||
+            input.DateOfBirth < today.AddYears(-120))
         {
-            throw new ArgumentException("Invalid guest age.");
+            throw new ReservationValidationException(
+                "يرجى تحديد تاريخ ميلاد صحيح (لا يزيد العمر عن ١٢٠ سنة).");
         }
 
         string phone = EgyptianPhone.Normalize(input.Phone);
@@ -81,6 +85,7 @@ public sealed class CreateReservationService
             Phone = phone,
             GovernorateId = input.GovernorateId,
             GuestChurch = input.GuestChurch.Trim(),
+            DateOfBirth = input.DateOfBirth,
             CreatedAt = now,
             UpdatedAt = now
         };
