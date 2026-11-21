@@ -26,7 +26,7 @@ public sealed class CustodyService : ICustodyService
 
         var activeStayIds = guests.Select(g => g.StayId).ToList();
         var items = await _context.CustodyItems.AsNoTracking()
-            .Where(i => activeStayIds.Contains(i.StayId))
+            .Where(i => activeStayIds.Contains(i.StayId) && i.ReturnedAt == null)
             .OrderByDescending(i => i.ReceivedAt)
             .ThenByDescending(i => i.Id)
             .Select(i => new CustodyItemRow(
@@ -42,6 +42,42 @@ public sealed class CustodyService : ICustodyService
             .ToListAsync(cancellationToken);
 
         return new CustodyOverview { Guests = guests, Items = items };
+    }
+
+    public async Task<CustodyReturnedPage> GetReturnedHistoryAsync(
+        int page, int pageSize = 20,
+        CancellationToken cancellationToken = default)
+    {
+        if (page < 1) throw new ArgumentOutOfRangeException(nameof(page));
+        if (pageSize < 1 || pageSize > 100)
+            throw new ArgumentOutOfRangeException(nameof(pageSize));
+
+        // Retained history includes guests whose stay has since ended.
+        var query = _context.CustodyItems.AsNoTracking()
+            .Where(i => i.ReturnedAt != null);
+
+        var totalCount = await query.CountAsync(cancellationToken);
+        var totalPages = Math.Max(1, (int)Math.Ceiling((double)totalCount / pageSize));
+        page = Math.Min(page, totalPages);
+
+        var items = await query
+            .OrderByDescending(i => i.ReturnedAt)
+            .ThenByDescending(i => i.Id)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(i => new CustodyItemRow(
+                i.Id, i.StayId, i.Stay.Guest.FullName,
+                i.ItemDescription, i.Quantity, i.StorageReference,
+                i.Notes, i.ReceivedAt, i.ReturnedAt))
+            .ToListAsync(cancellationToken);
+
+        return new CustodyReturnedPage
+        {
+            Items = items,
+            TotalCount = totalCount,
+            Page = page,
+            PageSize = pageSize
+        };
     }
 
     public async Task AddAsync(
