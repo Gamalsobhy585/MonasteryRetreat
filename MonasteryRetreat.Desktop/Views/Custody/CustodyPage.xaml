@@ -85,7 +85,7 @@
                                         Background="{StaticResource LightBrown}"
                                         Foreground="White" BorderThickness="0"
                                         Click="Refresh_Click"/>
-                                <TextBlock Text="المتعلقات المسجلة"
+                                <TextBlock Text="المتعلقات الموجودة بالخزنة"
                                            Style="{StaticResource SectionTitle}"/>
                             </DockPanel>
                         </Border>
@@ -97,7 +97,7 @@
                                        Foreground="{StaticResource Brown}"/>
                         </StackPanel>
                         <TextBlock x:Name="EmptyText"
-                                   Text="لا توجد متعلقات مسجلة للضيوف الحاليين."
+                                   Text="لا توجد متعلقات غير مستردة حاليًا."
                                    Visibility="Collapsed" Margin="18,10"
                                    Foreground="#6E655B"/>
                         <DataGrid x:Name="ItemsGrid" Margin="18,8,18,20"
@@ -129,6 +129,57 @@
                         </DataGrid>
                     </StackPanel>
                 </Border>
+                <Expander x:Name="ReturnedHistoryExpander"
+                          Header="سجل المتعلقات المستردة"
+                          Expanded="ReturnedHistory_Expanded"
+                          Collapsed="ReturnedHistory_Collapsed"
+                          Margin="0,0,0,16"
+                          FontSize="16"
+                          FontWeight="SemiBold"
+                          Foreground="{StaticResource Brown}">
+                    <Border Background="White" BorderBrush="{StaticResource BorderBrushCustom}"
+                            BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,10,0,0">
+                        <StackPanel>
+                            <TextBlock Text="السجل محفوظ لجميع الضيوف، حتى بعد انتهاء إقامتهم. يُعرض ٢٠ سجلًا في الصفحة."
+                                       FontSize="13" FontWeight="Normal" Foreground="#6E655B"
+                                       Margin="0,0,0,12"/>
+                            <DataGrid x:Name="ReturnedGrid" AutoGenerateColumns="False"
+                                      IsReadOnly="True" CanUserAddRows="False"
+                                      CanUserDeleteRows="False"
+                                      HeadersVisibility="Column" RowHeight="44"
+                                      FontSize="13" FontWeight="Normal"
+                                      GridLinesVisibility="Horizontal"
+                                      HorizontalGridLinesBrush="{StaticResource BorderBrushCustom}"
+                                      MaxHeight="440" VerticalScrollBarVisibility="Auto">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="الضيف" Binding="{Binding GuestName}" Width="1.2*"/>
+                                    <DataGridTextColumn Header="المتعلق" Binding="{Binding ItemDescription}" Width="1.7*"/>
+                                    <DataGridTextColumn Header="الكمية" Binding="{Binding Quantity}" Width="65"/>
+                                    <DataGridTextColumn Header="مكان الحفظ" Binding="{Binding StorageReference}" Width="*"/>
+                                    <DataGridTextColumn Header="وقت الاستلام" Binding="{Binding ReceivedText}" Width="1.2*"/>
+                                    <DataGridTextColumn Header="وقت التسليم" Binding="{Binding ReturnedText}" Width="1.2*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <TextBlock x:Name="ReturnedEmptyText"
+                                       Text="لم يتم استرداد أي متعلقات بعد."
+                                       Margin="0,12" FontWeight="Normal" FontSize="13"
+                                       Visibility="Collapsed"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"
+                                        Margin="0,12,0,0">
+                                <Button x:Name="PreviousHistoryButton" Content="السابق"
+                                        Width="90" Height="34" Margin="4,0"
+                                        Click="HistoryPrevious_Click"/>
+                                <TextBlock x:Name="HistoryPageText"
+                                           VerticalAlignment="Center"
+                                           FontSize="13" FontWeight="Normal"
+                                           Margin="10,0"/>
+                                <Button x:Name="NextHistoryButton" Content="التالي"
+                                        Width="90" Height="34" Margin="4,0"
+                                        Click="HistoryNext_Click"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Expander>
             </StackPanel>
         </ScrollViewer>
     </Grid>
