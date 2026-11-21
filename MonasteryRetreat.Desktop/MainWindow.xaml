@@ -104,6 +104,18 @@
                         Margin="0,0,0,8"
                         Click="SpeakersNav_Click"/>
 
+                <Button x:Name="MealsNavButton"
+                        Content="☷  الوجبات"
+                        Height="54"
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        Foreground="White"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Style="{StaticResource NavButton}"
+                        Margin="0,0,0,8"
+                        Click="MealsNav_Click"/>
+
                 <Button x:Name="NewReservationNavButton"
                         Content="＋  حجز جديد"
                         Height="54"

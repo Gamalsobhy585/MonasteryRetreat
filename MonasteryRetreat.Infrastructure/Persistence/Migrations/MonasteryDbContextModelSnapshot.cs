@@ -527,6 +527,53 @@ namespace MonasteryRetreat.Infrastructure.Persistence.Migrations
                     b.ToTable("speaker_assignments", (string)null);
                 });
 
+            modelBuilder.Entity("MonasteryRetreat.Domain.Entities.DailyMealMenu", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Breakfast")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("breakfast");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Dinner")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("dinner");
+
+                    b.Property<string>("Lunch")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("lunch");
+
+                    b.Property<DateOnly>("MenuDate")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("menu_date");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_daily_meal_menus");
+
+                    b.HasIndex("MenuDate")
+                        .IsUnique()
+                        .HasDatabaseName("ix_daily_meal_menus_menu_date");
+
+                    b.ToTable("daily_meal_menus", (string)null);
+                });
+
             modelBuilder.Entity("MonasteryRetreat.Domain.Entities.Stay", b =>
                 {
                     b.Property<long>("Id")
