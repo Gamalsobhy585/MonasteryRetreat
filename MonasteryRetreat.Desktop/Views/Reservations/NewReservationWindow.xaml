@@ -293,7 +293,7 @@
 
                                         <TextBox x:Name="PhoneTextBox"
                                                  Style="{StaticResource FormTextBox}"
-                                                 MaxLength="20"
+                                                 MaxLength="11"
                                                  FlowDirection="LeftToRight"
                                                  TextAlignment="Right"/>
                                     </StackPanel>
