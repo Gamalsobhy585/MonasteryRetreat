@@ -301,7 +301,14 @@ public partial class RetreatProgramPage : UserControl
                 TextAlignment = TextAlignment.Center,
                 FontSize = 24,
                 FontWeight = FontWeights.Bold,
-                Margin = new Thickness(0, 0, 0, 20)
+                Margin = new Thickness(0, 0, 0, 8)
+            });
+            document.Blocks.Add(new Paragraph(new Run("تنويه: برنامج يوم الأحد يختلف عن باقي الأيام."))
+            {
+                TextAlignment = TextAlignment.Center,
+                FontSize = 13,
+                FontWeight = FontWeights.SemiBold,
+                Margin = new Thickness(0, 0, 0, 18)
             });
 
             var table = new Table { CellSpacing = 0 };
@@ -322,7 +329,12 @@ public partial class RetreatProgramPage : UserControl
                 var tr = new TableRow();
                 tr.Cells.Add(PrintCell(row.TimeText));
                 tr.Cells.Add(PrintCell(row.TitleAr));
-                tr.Cells.Add(PrintCell(row.DescriptionAr ?? "—"));
+                // Older saved sample rows may still contain the redundant Sunday reminder.
+                // Suppress it only for printing, without altering user data.
+                var details = (row.DescriptionAr ?? string.Empty)
+                    .Replace("راجع مواعيد الأحد مع المسؤول.", string.Empty)
+                    .Trim();
+                tr.Cells.Add(PrintCell(details.Length == 0 ? "—" : details));
                 group.Rows.Add(tr);
             }
 
