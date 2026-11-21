@@ -21,6 +21,9 @@ public class GuestConfiguration : IEntityTypeConfiguration<Guest>
             .IsRequired()
             .HasMaxLength(20);
 
+        builder.Property(x => x.DateOfBirth)
+            .HasColumnType("TEXT");
+
         builder.Property(x => x.NationalId)
             .HasMaxLength(14);
 
