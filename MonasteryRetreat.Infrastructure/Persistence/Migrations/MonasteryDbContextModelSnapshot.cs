@@ -158,6 +158,10 @@ namespace MonasteryRetreat.Infrastructure.Persistence.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("created_at");
 
+                    b.Property<DateOnly?>("DateOfBirth")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("date_of_birth");
+
                     b.Property<string>("EmergencyContactName")
                         .HasColumnType("TEXT")
                         .HasColumnName("emergency_contact_name");
