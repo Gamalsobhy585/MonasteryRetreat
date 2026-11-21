@@ -49,6 +49,9 @@ public partial class NewReservationPage : UserControl
 
         DepartureDatePicker.SelectedDate =
             DateTime.Today.AddDays(4);
+
+        DateOfBirthPicker.DisplayDateEnd = DateTime.Today;
+        DateOfBirthPicker.DisplayDateStart = DateTime.Today.AddYears(-120);
     }
 
     private void ArrivalDateChanged(
@@ -308,14 +311,12 @@ public partial class NewReservationPage : UserControl
             return false;
         }
 
-        if (!int.TryParse(
-                AgeTextBox.Text.Trim(),
-                out int age) ||
-            age < 1 ||
-            age > 120)
+        if (DateOfBirthPicker.SelectedDate is not DateTime birthDate ||
+            birthDate.Date > DateTime.Today ||
+            birthDate.Date < DateTime.Today.AddYears(-120))
         {
-            ShowError("يرجى إدخال سن صحيح من 1 إلى 120");
-            AgeTextBox.Focus();
+            ShowError("يرجى اختيار تاريخ ميلاد صحيح لا يتجاوز اليوم ولا يزيد العمر عن ١٢٠ سنة");
+            DateOfBirthPicker.Focus();
             return false;
         }
 
@@ -327,7 +328,7 @@ public partial class NewReservationPage : UserControl
             Phone = phone,
             GovernorateId = governorate.Id,
             GuestChurch = church,
-            Age = age,
+            DateOfBirth = DateOnly.FromDateTime(birthDate),
             Notes = notes
         };
 
@@ -352,7 +353,7 @@ public partial class NewReservationPage : UserControl
         FullNameTextBox.Clear();
         PhoneTextBox.Clear();
         GuestChurchTextBox.Clear();
-        AgeTextBox.Clear();
+        DateOfBirthPicker.SelectedDate = null;
         NotesTextBox.Clear();
 
         // Governorate
