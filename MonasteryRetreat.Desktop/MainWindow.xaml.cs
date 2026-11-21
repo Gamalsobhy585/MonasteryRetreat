@@ -4,6 +4,7 @@ using System.Windows.Media;
 using MonasteryRetreat.Desktop.Views.Accommodation;
 using MonasteryRetreat.Desktop.Views.Reservations;
 using MonasteryRetreat.Desktop.Views.Liturgy;
+using MonasteryRetreat.Desktop.Views.Custody;
 
 namespace MonasteryRetreat.Desktop;
 
@@ -23,17 +24,20 @@ public partial class MainWindow : Window
     private readonly ReservationsPage _reservationsPage;
     private readonly AccommodationPage _accommodationPage;
     private readonly LiturgyAssignmentsPage _liturgyPage;
+    private readonly CustodyPage _custodyPage;
 
     public MainWindow(
         NewReservationPage newReservationPage,
         ReservationsPage reservationsPage,
         AccommodationPage accommodationPage,
-        LiturgyAssignmentsPage liturgyPage)
+        LiturgyAssignmentsPage liturgyPage,
+        CustodyPage custodyPage)
     {
         _newReservationPage = newReservationPage;
         _reservationsPage = reservationsPage;
         _accommodationPage = accommodationPage;
         _liturgyPage = liturgyPage;
+        _custodyPage = custodyPage;
 
         InitializeComponent();
 
@@ -59,6 +63,12 @@ public partial class MainWindow : Window
         SetActive(LiturgyNavButton);
     }
 
+    private void ShowCustody()
+    {
+        PageHost.Content = _custodyPage;
+        SetActive(CustodyNavButton);
+    }
+
     private void ShowNewReservation()
     {
         PageHost.Content = _newReservationPage;
@@ -82,6 +92,11 @@ public partial class MainWindow : Window
                 ? ActiveBrush
                 : InactiveBrush;
 
+        CustodyNavButton.Background =
+            ReferenceEquals(active, CustodyNavButton)
+                ? ActiveBrush
+                : InactiveBrush;
+
         NewReservationNavButton.Background =
             ReferenceEquals(active, NewReservationNavButton)
                 ? ActiveBrush
@@ -96,6 +111,9 @@ public partial class MainWindow : Window
 
     private void LiturgyNav_Click(object sender, RoutedEventArgs e)
         => ShowLiturgy();
+
+    private void CustodyNav_Click(object sender, RoutedEventArgs e)
+        => ShowCustody();
 
     private void NewReservationNav_Click(object sender, RoutedEventArgs e)
         => ShowNewReservation();
